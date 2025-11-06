@@ -5,11 +5,18 @@ namespace App\Http\Controllers;
 use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage; // Tambahkan ini
+use App\Models\ActivityLog;
+use Illuminate\Support\Facades\Session;
 
 class SettingController extends Controller
 {
     public function edit()
     {
+        ActivityLog::create([
+            'action' => 'create',
+            'user_id' => Session::get('id'), // ID pengguna yang sedang login
+            'description' => 'User Masuk Ke Setting.',
+        ]);
 
         $setting = Setting::first();
 

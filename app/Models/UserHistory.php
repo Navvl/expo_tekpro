@@ -3,15 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class User extends Authenticatable
+class UserHistory extends Authenticatable
 {
-    use HasFactory, SoftDeletes;
 
-    protected $table = 'user'; // Menetapkan nama tabel jika tidak sesuai dengan konvensi
-    protected $primaryKey = 'id_user'; // Menetapkan primary key yang benar
+
+    protected $table = 'user_history'; // Menetapkan nama tabel jika tidak sesuai dengan konvensi
+    protected $primaryKey = 'id_user_history'; // Menetapkan primary key yang benar
 
     // Jika menggunakan timestamps, pastikan ini diset sesuai dengan kolom di tabel
     const CREATED_AT = 'created_at';
@@ -19,6 +17,7 @@ class User extends Authenticatable
 
     // Daftar kolom yang dapat diisi massal
     protected $fillable = [
+        'id_user',
         'username',
         'password',
         'created_at',
