@@ -35,7 +35,7 @@ $userLevel =session()->get('level'); // Sesuaikan dengan cara Anda menyimpan lev
 
 
 
-            <h4 class="logo-title">Hope UI</h4>
+            <h4 class="logo-title">Noive</h4>
         </a>
         <div class="sidebar-toggle" data-toggle="sidebar" data-active="true">
             <i class="icon">
