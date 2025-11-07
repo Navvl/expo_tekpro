@@ -17,41 +17,55 @@ class LoginController extends Controller
 
     public function aksi_login(Request $request)
     {
-        // Validasi input
+        // Basic validation
         $request->validate([
             'username' => 'required|string',
             'password' => 'required|string',
-            'backup_captcha' => 'required_if:backup_captcha,!=,null',
         ]);
 
-        Log::info('Login attempt', $request->all());
-        Log::info('Session ID: ' . session_id());
-        Log::info('Session values: ' . json_encode(session()->all()));
+        Log::info("=== LOGIN START ===");
+        Log::info("Username input: {$request->username}");
+        Log::info("Session ID: " . session_id());
+        Log::info("Session content: " . json_encode(session()->all()));
 
+        // CAPTCHA check
         if ($request->filled('backup_captcha')) {
             $sessionCaptcha = Session::get('captcha');
-            Log::info('User  backup captcha input: ' . $request->backup_captcha);
-            Log::info('Session captcha value: ' . $sessionCaptcha);
+
+            Log::info("User captcha input: {$request->backup_captcha}");
+            Log::info("Session captcha: {$sessionCaptcha}");
 
             if ($request->backup_captcha !== $sessionCaptcha) {
-                Log::warning('Invalid CAPTCHA input by user: ' . $request->backup_captcha);
+                Log::warning("CAPTCHA FAILED: user={$request->backup_captcha}, session={$sessionCaptcha}");
                 return back()->withErrors(['backup_captcha' => 'Invalid CAPTCHA'])->withInput();
             }
         }
 
         $user = User::where('username', $request->username)->first();
 
+        if (!$user) {
+            Log::warning("USER NOT FOUND: {$request->username}");
+        } else {
+            Log::info("User found: {$user->username}");
+        }
+
+        // Password check
         if ($user && $request->password === $user->password) {
+
+            Log::info("LOGIN SUCCESS: {$user->username}");
+
             Session::put('id', $user->id_user);
             Session::put('level', $user->level);
             Session::put('username', $user->username);
-            Log::info('Login successful for user: ' . $user->username);
-            return redirect()->route('dashboard')->with('success', 'Login successful');
-        } else {
-            Log::warning('Login failed for username: ' . $request->username);
-            return back()->withErrors(['loginError' => 'Invalid username or password'])->withInput();
+
+            return redirect()->route('dashboard');
         }
+
+        Log::warning("LOGIN FAILED: bad credentials for {$request->username}");
+
+        return back()->withErrors(['loginError' => 'Invalid username or password'])->withInput();
     }
+
 
     private function generateCaptcha()
     {

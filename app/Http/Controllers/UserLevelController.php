@@ -43,7 +43,7 @@ class UserLevelController extends Controller
         $userLevel = $request->input('user_level');
         $selectedMenus = $request->input('menus', []);
 
-        $allMenus = ['Dashboard', 'Setting', 'Surat']; // Sesuaikan dengan daftar menu Anda
+        $allMenus = ['Dashboard', 'Setting', 'Room'];
 
         foreach ($allMenus as $menu) {
             Permission::updateOrCreate(
