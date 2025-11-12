@@ -5,11 +5,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\LogController;
+use App\Http\Controllers\NoteController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\UserLevelController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RestoreEditController;
 use App\Http\Controllers\RestoreDeleteController;
+use App\Http\Controllers\PageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -87,3 +89,14 @@ Route::get('/myroom', [RoomController::class, 'myroom'])
 Route::post('/t_room', [RoomController::class, 't_room'])->name('t_room');
 Route::delete('/room-destroy/{id_room}', [RoomController::class, 'room_destroy'])->name('room.destroy');
 Route::post('/invite_user/{id_room}', [RoomController::class, 'invite_user'])->name('invite_user');
+
+Route::get('/all_room', [RoomController::class, 'all_room'])
+    ->middleware('check.permission:setting')
+    ->name('all_room');
+Route::delete('/room-quit/{id_room}', [RoomController::class, 'quit_room'])->name('room.quit');
+
+// ROUTE NOTE
+Route::get('/note/{id_room}', [NoteController::class, 'note'])
+    ->middleware('check.permission:setting')
+    ->name('note');
+Route::post('/t_note', [NoteController::class, 't_note'])->name('t_note');

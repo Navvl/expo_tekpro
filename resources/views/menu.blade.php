@@ -211,7 +211,7 @@ $userLevel =session()->get('level'); // Sesuaikan dengan cara Anda menyimpan lev
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link " href="">
+                            <a class="nav-link " href="{{route('all_room')}}">
                                 <i class="icon">
                                     <svg class="icon-10" xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24" fill="currentColor">
                                         <g>
@@ -219,8 +219,8 @@ $userLevel =session()->get('level'); // Sesuaikan dengan cara Anda menyimpan lev
                                         </g>
                                     </svg>
                                 </i>
-                                <i class="sidenav-mini-icon"> C </i>
-                                <span class="item-name">Surat Masuk</span>
+                                <i class="sidenav-mini-icon"> B </i>
+                                <span class="item-name">Other Room</span>
                             </a>
                         </li>
                         <li class="nav-item">

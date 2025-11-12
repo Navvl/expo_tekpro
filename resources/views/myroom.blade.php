@@ -3,7 +3,7 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between">
                 <div class="header-title">
-                    <h4 class="card-title">Room</h4>
+                    <h4 class="card-title">My Room</h4>
                     <br>
                     <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addRoomModal">
                         Add New Room
@@ -14,7 +14,7 @@
             <div class="card-body">
 
                 @if ($room->isEmpty())
-                    <p>No rooms found.</p>
+                    <p>You have no rooms.</p>
                 @endif
 
                 <div class="row">
@@ -70,7 +70,8 @@
                                     <small>Created at: {{ $value->created_at }}</small>
                                 </p>
 
-                                <a href="#" class="btn btn-primary btn-sm">Open</a>
+                                <a href="{{ route('note', ['id_room' => $value->id_room]) }}" class="btn btn-primary btn-sm">Open</a>
+
 
                             </div>
 
@@ -203,118 +204,130 @@
 
 <script> 
 document.addEventListener('DOMContentLoaded', function () {
-  const inviteModal  = document.getElementById('inviteUserModal');
-  const inviteForm   = document.getElementById('inviteUserForm');
-  const chipsWrap    = document.getElementById('invitedChips');
-  const hiddenWrap   = document.getElementById('hiddenUserInputs');
-  const searchInput  = document.getElementById('userSearch');
-  const resultsBox   = document.getElementById('userResults');
+    const deleteModal = document.getElementById('confirmDeleteModal');
+    const deleteForm  = document.getElementById('deleteRoomForm');
 
-  // All users map/dataset
-  const USERS = (window.ALL_USERS || []); // [{id:'1', name:'Admin'}, ...]
-  const byId  = Object.fromEntries(USERS.map(u => [String(u.id), u]));
+    deleteModal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        const roomId = button.getAttribute('data-room-id');
 
-  let selected = new Set(); // of string user IDs
-
-  function renderChips() {
-    chipsWrap.innerHTML = '';
-    hiddenWrap.innerHTML = '';
-    if (selected.size === 0) {
-      const hint = document.createElement('span');
-      hint.className = 'text-muted';
-      hint.textContent = 'No users selected';
-      chipsWrap.appendChild(hint);
-    } else {
-      [...selected].forEach(id => {
-        const u = byId[id];
-        const chip = document.createElement('span');
-        chip.className = 'badge rounded-pill bg-primary d-inline-flex align-items-center';
-        chip.style.gap = '8px';
-        chip.textContent = u ? u.name : ('User ' + id);
-
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'btn btn-sm btn-link text-light p-0 ms-2';
-        btn.innerHTML = '&times;';
-        btn.addEventListener('click', () => {
-          selected.delete(id);
-          renderChips();
-          renderResults();
-        });
-
-        chip.appendChild(btn);
-        chipsWrap.appendChild(chip);
-
-        // hidden input for submission
-        const hidden = document.createElement('input');
-        hidden.type  = 'hidden';
-        hidden.name  = 'user_id[]';
-        hidden.value = id;
-        hiddenWrap.appendChild(hidden);
-      });
-    }
-  }
-
-  function renderResults() {
-    const q = searchInput.value.trim().toLowerCase();
-    resultsBox.innerHTML = '';
-
-    const candidates = USERS.filter(u => !selected.has(String(u.id)));
-    const filtered   = q ? candidates.filter(u =>
-      String(u.id).includes(q) || (u.name || '').toLowerCase().includes(q)
-    ) : candidates;
-
-    if (filtered.length === 0) {
-      const empty = document.createElement('div');
-      empty.className = 'list-group-item bg-transparent text-muted';
-      empty.textContent = 'No users found';
-      resultsBox.appendChild(empty);
-      return;
-    }
-
-    filtered.forEach(u => {
-      const item = document.createElement('button');
-      item.type = 'button';
-      item.className = 'list-group-item list-group-item-action bg-transparent text-light';
-      item.textContent = u.name + " (ID: " + u.id + ")";
-      item.addEventListener('click', () => {
-        selected.add(String(u.id));
-        renderChips();
-        renderResults();
-      });
-      resultsBox.appendChild(item);
+        // Set the DELETE form action dynamically
+        deleteForm.action = "{{ url('/room-destroy') }}/" + roomId;
     });
-  }
 
-  // When opening modal, preload selections from trigger button
-    inviteModal.addEventListener('show.bs.modal', function (event) {
-        const button  = event.relatedTarget;
-        const roomId  = button.getAttribute('data-room-id');
-        const csv     = (button.getAttribute('data-user-list') || '').trim();
 
-        // Set form action
-        inviteForm.action = "{{ url('/invite_user') }}/" + roomId;
+    const inviteModal  = document.getElementById('inviteUserModal');
+    const inviteForm   = document.getElementById('inviteUserForm');
+    const chipsWrap    = document.getElementById('invitedChips');
+    const hiddenWrap   = document.getElementById('hiddenUserInputs');
+    const searchInput  = document.getElementById('userSearch');
+    const resultsBox   = document.getElementById('userResults');
 
-        // Reset UI
-        searchInput.value = '';
-        selected = new Set();
+    // All users map/dataset
+    const USERS = (window.ALL_USERS || []); // [{id:'1', name:'Admin'}, ...]
+    const byId  = Object.fromEntries(USERS.map(u => [String(u.id), u]));
 
-        // Preselect invited users (robust)
-        if (csv && csv.length > 0) {
-            csv.split(',').forEach(id => {
-                id = id.trim();
-                if (id !== "" && byId[id]) {
-                    selected.add(id);
-                }
+    let selected = new Set(); // of string user IDs
+
+    function renderChips() {
+        chipsWrap.innerHTML = '';
+        hiddenWrap.innerHTML = '';
+        if (selected.size === 0) {
+        const hint = document.createElement('span');
+        hint.className = 'text-muted';
+        hint.textContent = 'No users selected';
+        chipsWrap.appendChild(hint);
+        } else {
+        [...selected].forEach(id => {
+            const u = byId[id];
+            const chip = document.createElement('span');
+            chip.className = 'badge rounded-pill bg-primary d-inline-flex align-items-center';
+            chip.style.gap = '8px';
+            chip.textContent = u ? u.name : ('User ' + id);
+
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'btn btn-sm btn-link text-light p-0 ms-2';
+            btn.innerHTML = '&times;';
+            btn.addEventListener('click', () => {
+            selected.delete(id);
+            renderChips();
+            renderResults();
             });
+
+            chip.appendChild(btn);
+            chipsWrap.appendChild(chip);
+
+            // hidden input for submission
+            const hidden = document.createElement('input');
+            hidden.type  = 'hidden';
+            hidden.name  = 'user_id[]';
+            hidden.value = id;
+            hiddenWrap.appendChild(hidden);
+        });
+        }
+    }
+
+    function renderResults() {
+        const q = searchInput.value.trim().toLowerCase();
+        resultsBox.innerHTML = '';
+
+        const candidates = USERS.filter(u => !selected.has(String(u.id)));
+        const filtered   = q ? candidates.filter(u =>
+        String(u.id).includes(q) || (u.name || '').toLowerCase().includes(q)
+        ) : candidates;
+
+        if (filtered.length === 0) {
+        const empty = document.createElement('div');
+        empty.className = 'list-group-item bg-transparent text-muted';
+        empty.textContent = 'No users found';
+        resultsBox.appendChild(empty);
+        return;
         }
 
-        renderChips();
-        renderResults();
-    });
+        filtered.forEach(u => {
+        const item = document.createElement('button');
+        item.type = 'button';
+        item.className = 'list-group-item list-group-item-action bg-transparent text-light';
+        item.textContent = u.name + " (ID: " + u.id + ")";
+        item.addEventListener('click', () => {
+            selected.add(String(u.id));
+            renderChips();
+            renderResults();
+        });
+        resultsBox.appendChild(item);
+        });
+    }
+
+    // When opening modal, preload selections from trigger button
+        inviteModal.addEventListener('show.bs.modal', function (event) {
+            const button  = event.relatedTarget;
+            const roomId  = button.getAttribute('data-room-id');
+            const csv     = (button.getAttribute('data-user-list') || '').trim();
+
+            // Set form action
+            inviteForm.action = "{{ url('/invite_user') }}/" + roomId;
+
+            // Reset UI
+            searchInput.value = '';
+            selected = new Set();
+
+            // Preselect invited users (robust)
+            if (csv && csv.length > 0) {
+                csv.split(',').forEach(id => {
+                    id = id.trim();
+                    if (id !== "" && byId[id]) {
+                        selected.add(id);
+                    }
+                });
+            }
+
+            renderChips();
+            renderResults();
+        });
 
 
-  // As you type, filter
-  searchInput.addEventListener('input', renderResults);
+    // As you type, filter
+    searchInput.addEventListener('input', renderResults);
 });
 </script>

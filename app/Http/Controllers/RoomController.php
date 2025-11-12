@@ -29,7 +29,11 @@ class RoomController extends BaseController
             'user_id' => Session::get('id'), // ID pengguna yang sedang login
             'description' => 'User Masuk Ke My Room.',
         ]);
-        $room = Room::with('user')->get();
+        $currentUserId = Session::get('id');
+
+        $room = Room::with('user')
+            ->where('id_user', $currentUserId)
+            ->get();
         $allUsers = User::all();
         echo view('header');
         echo view('menu');
@@ -64,8 +68,6 @@ class RoomController extends BaseController
         }
     }
 
-
-
     public function room_destroy($id)
     {
         ActivityLog::create([
@@ -90,7 +92,7 @@ class RoomController extends BaseController
 
         if ($room->id_access) {
             $access = Access::findOrFail($room->id_access);
-            $access->id_user = implode(',', $request->user_id); // replace with current selection
+            $access->id_user = implode(',', $request->user_id);
             $access->save();
         } else {
             $access = new Access();
@@ -104,69 +106,53 @@ class RoomController extends BaseController
         return back()->with('success', 'Users updated.');
     }
 
-
-    public function detail($id)
+    public function all_room()
     {
         ActivityLog::create([
             'action' => 'create',
-            'user_id' => Session::get('id'), // ID pengguna yang sedang login
-            'description' => 'User Masuk Ke Detail.',
+            'user_id' => Session::get('id'),
+            'description' => 'User Masuk Ke My Room.',
         ]);
+        $currentUserId = Session::get('id');
 
-        // Mencari pengguna berdasarkan ID
-        $user = User::findOrFail($id);
+        $room = Room::with(['user', 'access'])
+        ->whereHas('access', function ($q) use ($currentUserId) {
+            $q->whereRaw('FIND_IN_SET(?, id_user)', [$currentUserId]);
+        })
+        ->get();
 
-        // Mengembalikan view dengan data pengguna dan level
+        $allUsers = User::all();
         echo view('header');
         echo view('menu');
-        echo view('detail', compact('user'));
+        echo view('all_room', compact('room','allUsers'));
         echo view('footer');
     }
 
-    public function updateDetail(Request $request)
+    public function quit_room($id_room)
     {
+        $userId = Session::get('id');
+
+        $room = Room::with('access')->findOrFail($id_room);
+
+        if (!$room->access) {
+            return redirect()->back()->withErrors(['msg' => 'This room has no access record.']);
+        }
+
+        $access = $room->access;
+
+        $userIds = array_filter(explode(',', $access->id_user));
+
+        $userIds = array_filter($userIds, fn($id) => (string)$id !== (string)$userId);
+
+        $access->id_user = implode(',', $userIds);
+        $access->save();
+
         ActivityLog::create([
-            'action' => 'create',
-            'user_id' => Session::get('id'), // ID pengguna yang sedang login
-            'description' => 'User Mengupdate User.',
+            'action' => 'quit',
+            'user_id' => $userId,
+            'description' => 'User quit from room ID ' . $id_room,
         ]);
 
-        try {
-            // Validasi input
-            $request->validate([
-                'username' => 'required',
-                'email' => 'required',
-                'level' => 'required',
-                // Validasi lain sesuai kebutuhan
-            ]);
-
-            // Mencari user berdasarkan ID
-            $user = User::findOrFail($request->input('id'));
-
-            // Simpan versi lama ke tabel user_history
-            UserHistory::create([
-                'id_user' => $user->id_user,
-                'username' => $user->username,
-                'email' => $user->email,
-                'level' => $user->level,
-                'created_at' => $user->created_at,
-                'updated_at' => $user->updated_at,
-            ]);
-
-            // Perbarui data user
-            $user->username = $request->input('username');
-            $user->email = $request->input('email');
-            $user->level = $request->input('level');
-            $user->save();
-
-            // Redirect dengan pesan sukses
-            return redirect()->route('user', $user->id)->with('success', 'Detail pengguna berhasil diperbarui.');
-        } catch (\Exception $e) {
-            // Log error
-            Log::error('Gagal memperbarui detail pengguna: ' . $e->getMessage());
-
-            // Redirect kembali dengan pesan kesalahan
-            return redirect()->back()->withErrors(['msg' => 'Gagal memperbarui detail pengguna. Silakan coba lagi.']);
-        }
+        return redirect()->back()->with('success', 'You have left the room.');
     }
 }

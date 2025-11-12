@@ -5,12 +5,12 @@ namespace App\Models;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Room extends Authenticatable
+class Page extends Authenticatable
 {
     use HasFactory;
 
-    protected $table = 'room'; // Menetapkan nama tabel jika tidak sesuai dengan konvensi
-    protected $primaryKey = 'id_room'; // Menetapkan primary key yang benar
+    protected $table = 'page'; // Menetapkan nama tabel jika tidak sesuai dengan konvensi
+    protected $primaryKey = 'id_page'; // Menetapkan primary key yang benar
 
     // Jika menggunakan timestamps, pastikan ini diset sesuai dengan kolom di tabel
     const CREATED_AT = 'created_at';
@@ -18,8 +18,8 @@ class Room extends Authenticatable
 
     // Daftar kolom yang dapat diisi massal
     protected $fillable = [
-        'room_title',
-        'id_access',
+        'page_title',
+        'page_field',
         'created_at',
         'updated_at',
         'id_user',
@@ -30,14 +30,10 @@ class Room extends Authenticatable
     {
         return $this->belongsTo(User::class, 'id_user', 'id_user');
     }
-    
-    public function access()
-    {
-        return $this->belongsTo(Access::class, 'id_access', 'id_access');
-    }
 
     public function note()
-{
-    return $this->hasMany(Note::class, 'id_note', 'id_note');
-}
+    {
+        return $this->belongsTo(Note::class, 'id_note', 'id_note');
+    }
+    
 }
