@@ -18,7 +18,7 @@ $userLevel =session()->get('level'); // Sesuaikan dengan cara Anda menyimpan lev
                         <rect x="10.5366" y="16.3945" width="16" height="4" rx="2" transform="rotate(45 10.5366 16.3945)" fill="currentColor" />
                         <rect x="10.5562" y="-0.556152" width="28" height="4" rx="2" transform="rotate(45 10.5562 -0.556152)" fill="currentColor" />
                     </svg> -->
-                    <img src="{{ asset('storage/logos/' . optional(App\Models\Setting::first())->logo) }}" alt="Logo" style="max-width: 150px;">
+                    <img src="{{ asset('storage/logos/' . optional(App\Models\Setting::first())->logo) }}" alt="Logo" style="max-width: 25px;">
 
                 </div>
                 <div class="logo-mini">
@@ -59,7 +59,7 @@ $userLevel =session()->get('level'); // Sesuaikan dengan cara Anda menyimpan lev
 
 
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{{route('dashboard')}}">
+                    <a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}"  aria-current="page" href="{{route('dashboard')}}">
                         <i class="icon">
                             <svg width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon-20">
                                 <path opacity="0.4" d="M16.0756 2H19.4616C20.8639 2 22.0001 3.14585 22.0001 4.55996V7.97452C22.0001 9.38864 20.8639 10.5345 19.4616 10.5345H16.0756C14.6734 10.5345 13.5371 9.38864 13.5371 7.97452V4.55996C13.5371 3.14585 14.6734 2 16.0756 2Z" fill="currentColor"></path>
@@ -70,117 +70,16 @@ $userLevel =session()->get('level'); // Sesuaikan dengan cara Anda menyimpan lev
                     </a>
                 </li>
 
-                @if(Permission::hasAccess($userLevel, 'setting'))
-                <li class="nav-item">
-                    <a class="nav-link" data-bs-toggle="collapse" href="#horizontal-menu" role="button" aria-expanded="false" aria-controls="horizontal-menu">
-                        <i class="icon">
-
-                            <svg width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon-20">
-                                <path opacity="0.4" d="M10.0833 15.958H3.50777C2.67555 15.958 2 16.6217 2 17.4393C2 18.2559 2.67555 18.9207 3.50777 18.9207H10.0833C10.9155 18.9207 11.5911 18.2559 11.5911 17.4393C11.5911 16.6217 10.9155 15.958 10.0833 15.958Z" fill="currentColor"></path>
-                                <path opacity="0.4" d="M22.0001 6.37867C22.0001 5.56214 21.3246 4.89844 20.4934 4.89844H13.9179C13.0857 4.89844 12.4102 5.56214 12.4102 6.37867C12.4102 7.1963 13.0857 7.86 13.9179 7.86H20.4934C21.3246 7.86 22.0001 7.1963 22.0001 6.37867Z" fill="currentColor"></path>
-                                <path d="M8.87774 6.37856C8.87774 8.24523 7.33886 9.75821 5.43887 9.75821C3.53999 9.75821 2 8.24523 2 6.37856C2 4.51298 3.53999 3 5.43887 3C7.33886 3 8.87774 4.51298 8.87774 6.37856Z" fill="currentColor"></path>
-                                <path d="M21.9998 17.3992C21.9998 19.2648 20.4609 20.7777 18.5609 20.7777C16.6621 20.7777 15.1221 19.2648 15.1221 17.3992C15.1221 15.5325 16.6621 14.0195 18.5609 14.0195C20.4609 14.0195 21.9998 15.5325 21.9998 17.3992Z" fill="currentColor"></path>
-                            </svg>
-                        </i>
-                        <span class="item-name">Setting</span>
-                        <i class="right-icon">
-                            <svg class="icon-18" xmlns="http://www.w3.org/2000/svg" width="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                            </svg>
-                        </i>
-                    </a>
-                    <ul class="sub-nav collapse" id="horizontal-menu" data-bs-parent="#sidebar-menu">
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{route('settings.edit')}}">
-                                <i class="icon">
-                                    <svg class="icon-10" xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24" fill="currentColor">
-                                        <g>
-                                            <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
-                                        </g>
-                                    </svg>
-                                </i>
-                                <i class="sidenav-mini-icon"> H </i>
-                                <span class="item-name"> Setting </span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link " href="{{route('log')}}">
-                                <i class="icon">
-                                    <svg class="icon-10" xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24" fill="currentColor">
-                                        <g>
-                                            <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
-                                        </g>
-                                    </svg>
-                                </i>
-                                <i class="sidenav-mini-icon"> D </i>
-                                <span class="item-name">Log Activity</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{route ('user.levels')}}">
-                                <i class="icon svg-icon">
-                                    <svg class="icon-10" xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24" fill="currentColor">
-                                        <g>
-                                            <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
-                                        </g>
-                                    </svg>
-                                </i>
-                                <i class="sidenav-mini-icon"> D </i>
-                                <span class="item-name">Permission</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{route ('user')}}">
-                                <i class="icon svg-icon">
-                                    <svg class="icon-10" xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24" fill="currentColor">
-                                        <g>
-                                            <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
-                                        </g>
-                                    </svg>
-                                </i>
-                                <i class="sidenav-mini-icon"> D </i>
-                                <span class="item-name">User</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{route ('restore_e')}}">
-                                <i class="icon svg-icon">
-                                    <svg class="icon-10" xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24" fill="currentColor">
-                                        <g>
-                                            <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
-                                        </g>
-                                    </svg>
-                                </i>
-                                <i class="sidenav-mini-icon"> D </i>
-                                <span class="item-name">Restore Edit</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{route ('restore_d')}}">
-                                <i class="icon svg-icon">
-                                    <svg class="icon-10" xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24" fill="currentColor">
-                                        <g>
-                                            <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
-                                        </g>
-                                    </svg>
-                                </i>
-                                <i class="sidenav-mini-icon"> D </i>
-                                <span class="item-name">Restore Delete</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                @endif
+                
                 <li>
                     <hr class="hr-horizontal">
                 </li>
                 <li class="nav-item static-item">
                     <a class="nav-link static-item disabled" href="#" tabindex="-1">
-                        <span class="default-icon">Pages</span>
+                        <span class="default-icon">Menu</span>
                         <span class="mini-icon">-</span>
                     </a>
                 </li>
-                @if(Permission::hasAccess($userLevel, 'room'))
                 <li class="nav-item">
                     <a class="nav-link" data-bs-toggle="collapse" href="#sidebar-special" role="button" aria-expanded="false" aria-controls="sidebar-special">
                         <i class="icon">
@@ -197,8 +96,8 @@ $userLevel =session()->get('level'); // Sesuaikan dengan cara Anda menyimpan lev
                         </i>
                     </a>
                     <ul class="sub-nav collapse" id="sidebar-special" data-bs-parent="#sidebar-menu">
-                        <li class="nav-item">
-                            <a class="nav-link " href="{{route('myroom')}}">
+                        <li class="nav-item" style="margin-top: 10px;">
+                             <a class="nav-link {{ request()->routeIs('myroom') ? 'active' : '' }}" href="{{route('myroom')}}">
                                 <i class="icon">
                                     <svg class="icon-10" xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24" fill="currentColor">
                                         <g>
@@ -210,8 +109,8 @@ $userLevel =session()->get('level'); // Sesuaikan dengan cara Anda menyimpan lev
                                 <span class="item-name">My Room</span>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link " href="{{route('all_room')}}">
+                        <li class="nav-item" style="margin-top: 10px;">
+                             <a class="nav-link {{ request()->routeIs('all_room') ? 'active' : '' }}" href="{{route('all_room')}}">
                                 <i class="icon">
                                     <svg class="icon-10" xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24" fill="currentColor">
                                         <g>
@@ -223,105 +122,8 @@ $userLevel =session()->get('level'); // Sesuaikan dengan cara Anda menyimpan lev
                                 <span class="item-name">Other Room</span>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link " href="">
-                                <i class="icon">
-                                    <svg class="icon-10" xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24" fill="currentColor">
-                                        <g>
-                                            <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
-                                        </g>
-                                    </svg>
-                                </i>
-                                <i class="sidenav-mini-icon"> K </i>
-                                <span class="item-name">Surat Keluar</span>
-                            </a>
-                        </li>
                     </ul>
                 </li>
-                @endif
-                @if(Permission::hasAccess($userLevel, 'dokumen'))
-                <li class="nav-item">
-                    <a class="nav-link" data-bs-toggle="collapse" href="#sidebar-auth" role="button" aria-expanded="false" aria-controls="sidebar-user">
-                        <i class="icon">
-                            <svg class="icon-20" width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path opacity="0.4" d="M12.0865 22C11.9627 22 11.8388 21.9716 11.7271 21.9137L8.12599 20.0496C7.10415 19.5201 6.30481 18.9259 5.68063 18.2336C4.31449 16.7195 3.5544 14.776 3.54232 12.7599L3.50004 6.12426C3.495 5.35842 3.98931 4.67103 4.72826 4.41215L11.3405 2.10679C11.7331 1.96656 12.1711 1.9646 12.5707 2.09992L19.2081 4.32684C19.9511 4.57493 20.4535 5.25742 20.4575 6.02228L20.4998 12.6628C20.5129 14.676 19.779 16.6274 18.434 18.1581C17.8168 18.8602 17.0245 19.4632 16.0128 20.0025L12.4439 21.9088C12.3331 21.9686 12.2103 21.999 12.0865 22Z" fill="currentColor"></path>
-                                <path d="M11.3194 14.3209C11.1261 14.3219 10.9328 14.2523 10.7838 14.1091L8.86695 12.2656C8.57097 11.9793 8.56795 11.5145 8.86091 11.2262C9.15387 10.9369 9.63207 10.934 9.92906 11.2193L11.3083 12.5451L14.6758 9.22479C14.9698 8.93552 15.448 8.93258 15.744 9.21793C16.041 9.50426 16.044 9.97004 15.751 10.2574L11.8519 14.1022C11.7049 14.2474 11.5127 14.3199 11.3194 14.3209Z" fill="currentColor"></path>
-                            </svg>
-                        </i>
-                        <span class="item-name">Dokumen</span>
-                        <i class="right-icon">
-                            <svg class="icon-18" xmlns="http://www.w3.org/2000/svg" width="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                            </svg>
-                        </i>
-                    </a>
-                    <ul class="sub-nav collapse" id="sidebar-auth" data-bs-parent="#sidebar-menu">
-                        <li class="nav-item">
-                            <a class="nav-link" href="">
-                                <i class="icon">
-                                    <svg class="icon-10" xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24" fill="currentColor">
-                                        <g>
-                                            <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
-                                        </g>
-                                    </svg>
-                                </i>
-                                <i class="sidenav-mini-icon"> L </i>
-                                <span class="item-name">Folder</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                @endif
-                @if(Permission::hasAccess($userLevel, 'pengajuan'))
-                <li class="nav-item">
-                    <a class="nav-link" data-bs-toggle="collapse" href="#sidebar-user" role="button" aria-expanded="false" aria-controls="sidebar-user">
-                        <i class="icon">
-                            <svg class="icon-20" width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M11.9488 14.54C8.49884 14.54 5.58789 15.1038 5.58789 17.2795C5.58789 19.4562 8.51765 20.0001 11.9488 20.0001C15.3988 20.0001 18.3098 19.4364 18.3098 17.2606C18.3098 15.084 15.38 14.54 11.9488 14.54Z" fill="currentColor"></path>
-                                <path opacity="0.4" d="M11.949 12.467C14.2851 12.467 16.1583 10.5831 16.1583 8.23351C16.1583 5.88306 14.2851 4 11.949 4C9.61293 4 7.73975 5.88306 7.73975 8.23351C7.73975 10.5831 9.61293 12.467 11.949 12.467Z" fill="currentColor"></path>
-                                <path opacity="0.4" d="M21.0881 9.21923C21.6925 6.84176 19.9205 4.70654 17.664 4.70654C17.4187 4.70654 17.1841 4.73356 16.9549 4.77949C16.9244 4.78669 16.8904 4.802 16.8725 4.82902C16.8519 4.86324 16.8671 4.90917 16.8895 4.93889C17.5673 5.89528 17.9568 7.0597 17.9568 8.30967C17.9568 9.50741 17.5996 10.6241 16.9728 11.5508C16.9083 11.6462 16.9656 11.775 17.0793 11.7948C17.2369 11.8227 17.3981 11.8371 17.5629 11.8416C19.2059 11.8849 20.6807 10.8213 21.0881 9.21923Z" fill="currentColor"></path>
-                                <path d="M22.8094 14.817C22.5086 14.1722 21.7824 13.73 20.6783 13.513C20.1572 13.3851 18.747 13.205 17.4352 13.2293C17.4155 13.232 17.4048 13.2455 17.403 13.2545C17.4003 13.2671 17.4057 13.2887 17.4316 13.3022C18.0378 13.6039 20.3811 14.916 20.0865 17.6834C20.074 17.8032 20.1698 17.9068 20.2888 17.8888C20.8655 17.8059 22.3492 17.4853 22.8094 16.4866C23.0637 15.9589 23.0637 15.3456 22.8094 14.817Z" fill="currentColor"></path>
-                                <path opacity="0.4" d="M7.04459 4.77973C6.81626 4.7329 6.58077 4.70679 6.33543 4.70679C4.07901 4.70679 2.30701 6.84201 2.9123 9.21947C3.31882 10.8216 4.79355 11.8851 6.43661 11.8419C6.60136 11.8374 6.76343 11.8221 6.92013 11.7951C7.03384 11.7753 7.09115 11.6465 7.02668 11.551C6.3999 10.6234 6.04263 9.50765 6.04263 8.30991C6.04263 7.05904 6.43303 5.89462 7.11085 4.93913C7.13234 4.90941 7.14845 4.86348 7.12696 4.82926C7.10906 4.80135 7.07593 4.78694 7.04459 4.77973Z" fill="currentColor"></path>
-                                <path d="M3.32156 13.5127C2.21752 13.7297 1.49225 14.1719 1.19139 14.8167C0.936203 15.3453 0.936203 15.9586 1.19139 16.4872C1.65163 17.4851 3.13531 17.8066 3.71195 17.8885C3.83104 17.9065 3.92595 17.8038 3.91342 17.6832C3.61883 14.9167 5.9621 13.6046 6.56918 13.3029C6.59425 13.2885 6.59962 13.2677 6.59694 13.2542C6.59515 13.2452 6.5853 13.2317 6.5656 13.2299C5.25294 13.2047 3.84358 13.3848 3.32156 13.5127Z" fill="currentColor"></path>
-                            </svg>
-                        </i>
-                        <span class="item-name">Pengajuan</span>
-                        <i class="right-icon">
-                            <svg class="icon-18" xmlns="http://www.w3.org/2000/svg" width="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                            </svg>
-                        </i>
-                    </a>
-                    <ul class="sub-nav collapse" id="sidebar-user" data-bs-parent="#sidebar-menu">
-                        <li class="nav-item">
-                            <a class="nav-link " href="">
-                                <i class="icon">
-                                    <svg class="icon-10" xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24" fill="currentColor">
-                                        <g>
-                                            <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
-                                        </g>
-                                    </svg>
-                                </i>
-                                <i class="sidenav-mini-icon"> U </i>
-                                <span class="item-name">Cuti</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link " href="">
-                                <i class="icon">
-                                    <svg class="icon-10" xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24" fill="currentColor">
-                                        <g>
-                                            <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
-                                        </g>
-                                    </svg>
-                                </i>
-                                <i class="sidenav-mini-icon"> A </i>
-                                <span class="item-name">Keterlambatan</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                @endif
             </ul>
             <!-- Sidebar Menu End -->
         </div>
@@ -370,15 +172,7 @@ $userLevel =session()->get('level'); // Sesuaikan dengan cara Anda menyimpan lev
                         </svg>
                     </i>
                 </div>
-                <div class="input-group search-input">
-                    <span class="input-group-text" id="search-input">
-                        <svg class="icon-18" width="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="11.7669" cy="11.7666" r="8.98856" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></circle>
-                            <path d="M18.0186 18.4851L21.5426 22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
-                        </svg>
-                    </span>
-                    <input type="search" class="form-control" placeholder="Search...">
-                </div>
+           
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon">
                         <span class="mt-2 navbar-toggler-bar bar1"></span>
@@ -396,25 +190,6 @@ $userLevel =session()->get('level'); // Sesuaikan dengan cara Anda menyimpan lev
                                 </svg>
                                 Log Out
                             </a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a href="#" class="search-toggle nav-link" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <img src="{{ asset ('images/Flag/flag001.png') }}" class="img-fluid rounded-circle" alt="user" style="height: 30px; min-width: 30px; width: 30px;">
-                                <span class="bg-primary"></span>
-                            </a>
-                            <div class="p-0 sub-drop dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton2">
-                                <div class="m-0 border-0 shadow-none card">
-                                    <div class="p-0 ">
-                                        <ul class="p-0 list-group list-group-flush">
-                                            <li class="iq-sub-card list-group-item"><a class="p-0" href="#"><img src="{{ asset ('images/Flag/flag-03.png') }}" alt="img-flaf" class="img-fluid me-2" style="width: 15px;height: 15px;min-width: 15px;" />Spanish</a></li>
-                                            <li class="iq-sub-card list-group-item"><a class="p-0" href="#"><img src="{{ asset ('images/Flag/flag-04.png') }}" alt="img-flaf" class="img-fluid me-2" style="width: 15px;height: 15px;min-width: 15px;" />Italian</a></li>
-                                            <li class="iq-sub-card list-group-item"><a class="p-0" href="#"><img src="{{ asset ('images/Flag/flag-02.png') }}" alt="img-flaf" class="img-fluid me-2" style="width: 15px;height: 15px;min-width: 15px;" />French</a></li>
-                                            <li class="iq-sub-card list-group-item"><a class="p-0" href="#"><img src="{{ asset ('images/Flag/flag-05.png') }}" alt="img-flaf" class="img-fluid me-2" style="width: 15px;height: 15px;min-width: 15px;" />German</a></li>
-                                            <li class="iq-sub-card list-group-item"><a class="p-0" href="#"><img src="{{ asset ('images/Flag/flag-06.png') }}" alt="img-flaf" class="img-fluid me-2" style="width: 15px;height: 15px;min-width: 15px;" />Japanese</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
                         </li>
                         <li class="nav-item dropdown">
                             <a href="#" class="nav-link" id="notification-drop" data-bs-toggle="dropdown">
@@ -486,81 +261,7 @@ $userLevel =session()->get('level'); // Sesuaikan dengan cara Anda menyimpan lev
                                 </div>
                             </div>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a href="#" class="nav-link" id="mail-drop" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <svg class="icon-24" width="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path opacity="0.4" d="M22 15.94C22 18.73 19.76 20.99 16.97 21H16.96H7.05C4.27 21 2 18.75 2 15.96V15.95C2 15.95 2.006 11.524 2.014 9.298C2.015 8.88 2.495 8.646 2.822 8.906C5.198 10.791 9.447 14.228 9.5 14.273C10.21 14.842 11.11 15.163 12.03 15.163C12.95 15.163 13.85 14.842 14.56 14.262C14.613 14.227 18.767 10.893 21.179 8.977C21.507 8.716 21.989 8.95 21.99 9.367C22 11.576 22 15.94 22 15.94Z" fill="currentColor"></path>
-                                    <path d="M21.4759 5.67351C20.6099 4.04151 18.9059 2.99951 17.0299 2.99951H7.04988C5.17388 2.99951 3.46988 4.04151 2.60388 5.67351C2.40988 6.03851 2.50188 6.49351 2.82488 6.75151L10.2499 12.6905C10.7699 13.1105 11.3999 13.3195 12.0299 13.3195C12.0339 13.3195 12.0369 13.3195 12.0399 13.3195C12.0429 13.3195 12.0469 13.3195 12.0499 13.3195C12.6799 13.3195 13.3099 13.1105 13.8299 12.6905L21.2549 6.75151C21.5779 6.49351 21.6699 6.03851 21.4759 5.67351Z" fill="currentColor"></path>
-                                </svg>
-                                <span class="bg-primary count-mail"></span>
-                            </a>
-                            <div class="p-0 sub-drop dropdown-menu dropdown-menu-end" aria-labelledby="mail-drop">
-                                <div class="m-0 shadow-none card">
-                                    <div class="py-3 card-header d-flex justify-content-between bg-primary">
-                                        <div class="header-title">
-                                            <h5 class="mb-0 text-white">All Message</h5>
-                                        </div>
-                                    </div>
-                                    <div class="p-0 card-body ">
-                                        <a href="#" class="iq-sub-card">
-                                            <div class="d-flex align-items-center">
-                                                <div class="">
-                                                    <img class="p-1 avatar-40 rounded-pill bg-soft-primary" src="{{ asset ('images/shapes/01.png') }}" alt="">
-                                                </div>
-                                                <div class="ms-3">
-                                                    <h6 class="mb-0 ">Bni Emma Watson</h6>
-                                                    <small class="float-start font-size-12">13 Jun</small>
-                                                </div>
-                                            </div>
-                                        </a>
-                                        <a href="#" class="iq-sub-card">
-                                            <div class="d-flex align-items-center">
-                                                <div class="">
-                                                    <img class="p-1 avatar-40 rounded-pill bg-soft-primary" src="{{ asset ('images/shapes/02.png') }}" alt="">
-                                                </div>
-                                                <div class="ms-3">
-                                                    <h6 class="mb-0 ">Lorem Ipsum Watson</h6>
-                                                    <small class="float-start font-size-12">20 Apr</small>
-                                                </div>
-                                            </div>
-                                        </a>
-                                        <a href="#" class="iq-sub-card">
-                                            <div class="d-flex align-items-center">
-                                                <div class="">
-                                                    <img class="p-1 avatar-40 rounded-pill bg-soft-primary" src="{{ asset ('images/shapes/03.png') }}" alt="">
-                                                </div>
-                                                <div class="ms-3">
-                                                    <h6 class="mb-0 ">Why do we use it?</h6>
-                                                    <small class="float-start font-size-12">30 Jun</small>
-                                                </div>
-                                            </div>
-                                        </a>
-                                        <a href="#" class="iq-sub-card">
-                                            <div class="d-flex align-items-center">
-                                                <div class="">
-                                                    <img class="p-1 avatar-40 rounded-pill bg-soft-primary" src="{{ asset ('images/shapes/04.png') }}" alt="">
-                                                </div>
-                                                <div class="ms-3">
-                                                    <h6 class="mb-0 ">Variations Passages</h6>
-                                                    <small class="float-start font-size-12">12 Sep</small>
-                                                </div>
-                                            </div>
-                                        </a>
-                                        <a href="#" class="iq-sub-card">
-                                            <div class="d-flex align-items-center">
-                                                <div class="">
-                                                    <img class="p-1 avatar-40 rounded-pill bg-soft-primary" src="{{ asset ('images/shapes/05.png') }}" alt="">
-                                                </div>
-                                                <div class="ms-3">
-                                                    <h6 class="mb-0 ">Lorem Ipsum generators</h6>
-                                                    <small class="float-start font-size-12">5 Dec</small>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
+                        
                         <li class="nav-item dropdown">
                             <a class="py-0 nav-link d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <img src="{{ asset ('images/avatars/01.png') }}" alt="User-Profile" class="theme-color-default-img img-fluid avatar avatar-50 avatar-rounded">
@@ -569,18 +270,10 @@ $userLevel =session()->get('level'); // Sesuaikan dengan cara Anda menyimpan lev
                                 <img src="{{ asset ('images/avatars/avtar_4.png') }}" alt="User-Profile" class="theme-color-green-img img-fluid avatar avatar-50 avatar-rounded">
                                 <img src="{{ asset ('images/avatars/avtar_5.png') }}" alt="User-Profile" class="theme-color-yellow-img img-fluid avatar avatar-50 avatar-rounded">
                                 <img src="{{ asset ('images/avatars/avtar_3.png') }}" alt="User-Profile" class="theme-color-pink-img img-fluid avatar avatar-50 avatar-rounded">
-                                <div class="caption ms-3 d-none d-md-block ">
-                                    <h6 class="mb-0 caption-title">Austin Robertson</h6>
-                                    <p class="mb-0 caption-sub-title">Marketing Administrator</p>
-                                </div>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="../dashboard/app/user-profile.html">Profile</a></li>
-                                <li><a class="dropdown-item" href="../dashboard/app/user-privacy-setting.html">Privacy Setting</a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="../dashboard/auth/sign-in.html">Logout</a></li>
+                                <li><a class="dropdown-item" href="{{ route('profile') }}">Profile</a></li>
+                                <li><a class="dropdown-item" href="{{route('logout')}}">Logout</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -593,17 +286,8 @@ $userLevel =session()->get('level'); // Sesuaikan dengan cara Anda menyimpan lev
                     <div class="col-md-12">
                         <div class="flex-wrap d-flex justify-content-between align-items-center">
                             <div>
-                                <h1>Hello Devs!</h1>
-                                <p>We are on a mission to help developers like you build successful projects for FREE.</p>
-                            </div>
-                            <div>
-                                <a href="" class="btn btn-link btn-soft-light">
-                                    <svg class="icon-20" width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M11.8251 15.2171H12.1748C14.0987 15.2171 15.731 13.985 16.3054 12.2764C16.3887 12.0276 16.1979 11.7713 15.9334 11.7713H14.8562C14.5133 11.7713 14.2362 11.4977 14.2362 11.16C14.2362 10.8213 14.5133 10.5467 14.8562 10.5467H15.9005C16.2463 10.5467 16.5263 10.2703 16.5263 9.92875C16.5263 9.58722 16.2463 9.31075 15.9005 9.31075H14.8562C14.5133 9.31075 14.2362 9.03619 14.2362 8.69849C14.2362 8.35984 14.5133 8.08528 14.8562 8.08528H15.9005C16.2463 8.08528 16.5263 7.8088 16.5263 7.46728C16.5263 7.12575 16.2463 6.84928 15.9005 6.84928H14.8562C14.5133 6.84928 14.2362 6.57472 14.2362 6.23606C14.2362 5.89837 14.5133 5.62381 14.8562 5.62381H15.9886C16.2483 5.62381 16.4343 5.3789 16.3645 5.13113C15.8501 3.32401 14.1694 2 12.1748 2H11.8251C9.42172 2 7.47363 3.92287 7.47363 6.29729V10.9198C7.47363 13.2933 9.42172 15.2171 11.8251 15.2171Z" fill="currentColor"></path>
-                                        <path opacity="0.4" d="M19.5313 9.82568C18.9966 9.82568 18.5626 10.2533 18.5626 10.7823C18.5626 14.3554 15.6186 17.2627 12.0005 17.2627C8.38136 17.2627 5.43743 14.3554 5.43743 10.7823C5.43743 10.2533 5.00345 9.82568 4.46872 9.82568C3.93398 9.82568 3.5 10.2533 3.5 10.7823C3.5 15.0873 6.79945 18.6413 11.0318 19.1186V21.0434C11.0318 21.5715 11.4648 22.0001 12.0005 22.0001C12.5352 22.0001 12.9692 21.5715 12.9692 21.0434V19.1186C17.2006 18.6413 20.5 15.0873 20.5 10.7823C20.5 10.2533 20.066 9.82568 19.5313 9.82568Z" fill="currentColor"></path>
-                                    </svg>
-                                    Announcements
-                                </a>
+                                <h1>Noive</h1>
+                                <p>We are on a mission to help people to sharing notes for free.</p>
                             </div>
                         </div>
                     </div>

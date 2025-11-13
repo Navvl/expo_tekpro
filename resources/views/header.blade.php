@@ -9,7 +9,7 @@
     <title>{{ optional(App\Models\Setting::first())->site_name ?? 'Default Site Name' }}</title>
 
     <!-- Favicon -->
-    <link rel="shortcut icon" href="{{ asset('images/favicon.ico') }}" />
+    <link rel="shortcut icon" href="{{ asset('images/favicon.png') }}" />
 
     <!-- Library / Plugin Css Build -->
     <link rel="stylesheet" href="{{ asset('css/core/libs.min.css') }}" />

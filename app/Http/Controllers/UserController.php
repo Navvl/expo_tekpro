@@ -183,4 +183,65 @@ class UserController extends BaseController
             return redirect()->back()->withErrors(['msg' => 'Gagal memperbarui detail pengguna. Silakan coba lagi.']);
         }
     }
+
+    public function profile()
+    {
+        $userId = Session::get('id');
+        $user = User::findOrFail($userId);
+
+        ActivityLog::create([
+            'action' => 'view',
+            'user_id' => $userId,
+            'description' => 'User membuka halaman profile',
+        ]);
+
+        echo view('header');
+        echo view('menu');
+        echo view('profile', compact('user'));
+        echo view('footer');
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $userId = Session::get('id');
+        $user = User::findOrFail($userId);
+
+        $request->validate([
+            'username' => 'required|string|max:255',
+            'email' => 'nullable|email',
+            'current_password' => 'nullable|string',
+            'password' => 'nullable|confirmed',
+        ]);
+
+        // Update name & email
+        $user->username = $request->username;
+        $user->email = $request->email;
+
+        // Handle password change only if filled
+        if (!empty($request->password)) {
+
+            // Require current password
+            if (empty($request->current_password)) {
+                return back()->withErrors(['msg' => 'You must enter your current password.'])->withInput();
+            }
+
+            // Compare plain password
+            if ($request->current_password !== $user->password) {
+                return back()->withErrors(['msg' => 'Old password is incorrect.'])->withInput();
+            }
+
+            // Update new password directly (plain)
+            $user->password = $request->password;
+        }
+
+        $user->save();
+
+        ActivityLog::create([
+            'action' => 'update',
+            'user_id' => $userId,
+            'description' => 'User memperbarui profile tanpa hashing password.',
+        ]);
+
+        return redirect()->back()->with('success', 'Profile updated successfully.');
+    }
 }

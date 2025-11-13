@@ -24,7 +24,7 @@ class LoginController extends Controller
         ]);
 
         Log::info("=== LOGIN START ===");
-        Log::info("Username input: {$request->username}");
+    Log::info("Username input: {$request->username}");
         Log::info("Session ID: " . session_id());
         Log::info("Session content: " . json_encode(session()->all()));
 

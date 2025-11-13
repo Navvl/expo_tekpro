@@ -107,3 +107,12 @@ Route::post('/page/store', [PageController::class, 'store'])->name('page.store')
 Route::post('/page/getByCode', [PageController::class, 'getByCode'])->name('page.getByCode');
 Route::get('/pages/{id}', [PageController::class, 'pages'])->name('page.pages');
 Route::post('/page/update/{id}', [PageController::class, 'update']);
+
+// ROUTE PROFILE
+Route::get('/profile', [UserController::class, 'profile'])
+    ->middleware('check.permission:setting')
+    ->name('profile');
+
+Route::post('/profile/update', [UserController::class, 'updateProfile'])
+    ->middleware('check.permission:setting')
+    ->name('profile.update');
