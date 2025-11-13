@@ -26,7 +26,10 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>
+                                    <a href="{{ url('pages/' . $data->id_note) }}" class="text-decoration-none text-primary fw-semibold">
                                         {{ $data->note_title }}
+                                    </a>
+
                                 </td>
                                 <td>{{ $data->pages_code }}</td>
                             </tr>

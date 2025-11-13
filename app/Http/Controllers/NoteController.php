@@ -57,6 +57,13 @@ class NoteController extends BaseController
             $note->note_title = $request->note_title;
             $note->id_room = $request->id_room;
             $note->save();
+            $pagesCode = 'PGS' . $note->id_note;
+            $exists = Note::where('pages_code', $pagesCode)->exists();
+            if ($exists) {
+                $pagesCode .= rand(10, 99);
+            }
+            $note->pages_code = $pagesCode;
+            $note->save();
 
             return redirect()->back()->with('success', 'note berhasil ditambahkan');
 
@@ -65,6 +72,5 @@ class NoteController extends BaseController
             return redirect()->back()->withErrors(['msg' => 'Gagal menambahkan note.']);
         }
     }
-
 
 }

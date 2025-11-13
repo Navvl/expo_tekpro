@@ -100,3 +100,10 @@ Route::get('/note/{id_room}', [NoteController::class, 'note'])
     ->middleware('check.permission:setting')
     ->name('note');
 Route::post('/t_note', [NoteController::class, 't_note'])->name('t_note');
+Route::post('/note/store', [NoteController::class, 'store'])->name('note.store');
+
+//ROUTE PAGE
+Route::post('/page/store', [PageController::class, 'store'])->name('page.store');
+Route::post('/page/getByCode', [PageController::class, 'getByCode'])->name('page.getByCode');
+Route::get('/pages/{id}', [PageController::class, 'pages'])->name('page.pages');
+Route::post('/page/update/{id}', [PageController::class, 'update']);

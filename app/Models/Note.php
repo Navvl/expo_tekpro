@@ -27,11 +27,12 @@ class Note extends Authenticatable
 
     public function page()
     {
-        return $this->belongsTo(User::class, 'id_page', 'id_page');
+        return $this->belongsTo(User::class, 'pages_code', 'pages_code');
     }
 
     public function room()
     {
         return $this->belongsTo(Room::class, 'id_room', 'id_room');
     }
+
 }
