@@ -9,14 +9,11 @@ class Page extends Authenticatable
 {
     use HasFactory;
 
-    protected $table = 'page'; // Menetapkan nama tabel jika tidak sesuai dengan konvensi
-    protected $primaryKey = 'id_page'; // Menetapkan primary key yang benar
+    protected $table = 'page'; 
+    protected $primaryKey = 'id_page';
 
-    // Jika menggunakan timestamps, pastikan ini diset sesuai dengan kolom di tabel
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
-
-    // Daftar kolom yang dapat diisi massal
     protected $fillable = [
         'page_title',
         'page_field',

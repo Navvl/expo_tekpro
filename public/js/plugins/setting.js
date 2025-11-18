@@ -350,5 +350,15 @@ Index Of Script
     if(custombodyclass !== null && custombodyclass !== undefined && colors !== null && colors !== undefined){
         customizerMode(custombodyclass,colors,color)     
     }
+function activateDarkAndTheme1() {
+    // ACTIVE DARK MODE
+    document.body.classList.add("dark");
+    sessionStorage.setItem("color-mode", "dark");
 
+    // ACTIVE THEME-1
+    document.body.classList.add("theme-1");
+    sessionStorage.setItem("color-mode1", "theme-1");
+}
+
+document.addEventListener("DOMContentLoaded", activateDarkAndTheme1);
 })()

@@ -107,6 +107,8 @@ Route::post('/page/store', [PageController::class, 'store'])->name('page.store')
 Route::post('/page/getByCode', [PageController::class, 'getByCode'])->name('page.getByCode');
 Route::get('/pages/{id}', [PageController::class, 'pages'])->name('page.pages');
 Route::post('/page/update/{id}', [PageController::class, 'update']);
+Route::post('/page/updateTitle', [PageController::class, 'updateTitle']);
+Route::delete('/pages/{id}/delete', [PageController::class, 'destroy']);
 
 // ROUTE PROFILE
 Route::get('/profile', [UserController::class, 'profile'])

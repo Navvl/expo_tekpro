@@ -123,4 +123,51 @@ class PageController extends Controller
             'data' => $pages
         ]);
     }
+
+    public function updateTitle(Request $request)
+    {
+        $request->validate([
+            'id_page' => 'required|integer',
+            'page_title' => 'required|string|max:255'
+        ]);
+
+        $page = Page::find($request->id_page);
+
+        if (!$page) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Page not found.'
+            ], 404);
+        }
+
+        $page->page_title = $request->page_title;
+        $page->updated_at = now();
+        $page->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Title updated successfully.'
+        ]);
+    }
+
+    public function destroy($id)
+    {
+        $page = Page::find($id);
+
+        if (!$page) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Note not found'
+            ], 404);
+        }
+
+        $page->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Note deleted successfully'
+        ]);
+    }
+
+
 }
