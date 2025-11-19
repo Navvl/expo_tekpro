@@ -47,15 +47,48 @@ class NoteController extends BaseController
         $request->validate([
             'username' => 'required|string|max:255',
             'email' => 'nullable|email',
+            'current_password' => 'nullable',
             'password' => 'nullable|min:6|confirmed',
+            'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
+        // Update username & email
         $user->username = $request->username;
         $user->email = $request->email;
 
+        // Update password jika ada input baru
         if (!empty($request->password)) {
-            $user->password = $request->password;
+
+            // Optional: cek current password (kalau mau strict)
+            if (!empty($request->current_password) && md5($request->current_password) !== $user->password) {
+                return back()->withErrors(['current_password' => 'Current password is incorrect.']);
+            }
+
+            // Hash password baru
+            $user->password = md5($request->password);
         }
+        Log::info("asddassaasdasdasds...");
+        // Update foto jika ada file baru
+        if ($request->hasFile('foto')) {
+            Log::info("UPLOADING FOTO...");
+
+            // Check old file
+            Log::info("Old file:", [
+                'exists' => $user->foto ? file_exists(storage_path('app/public/' . $user->foto)) : null,
+                'path' => $user->foto
+            ]);
+
+            $path = $request->file('foto')->store('profile', 'public');
+
+            Log::info("NEW PHOTO PATH STORED:", [
+                'path' => $path,
+                'full_path' => storage_path('app/public/' . $path),
+                'file_exists' => file_exists(storage_path('app/public/' . $path)),
+            ]);
+
+            $user->foto = $path;
+        }
+
 
         $user->save();
 
@@ -67,5 +100,4 @@ class NoteController extends BaseController
 
         return redirect()->back()->with('success', 'Profile updated successfully.');
     }
-
 }

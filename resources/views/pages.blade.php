@@ -248,6 +248,301 @@ body {
         grid-template-columns: 1fr;
     }
 }
+
+/* AI STYLEE >>>>>>>>>>>>> */
+#aiPopup {
+    position: fixed !important;
+    background: white;
+    padding: 10px 14px;
+    border-radius: 10px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.25);
+    font-size: 14px;
+    font-weight: 600;
+    background-color: rgba(0,0,0,0.85);
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(-8px);
+    pointer-events: none;
+    z-index: 9999999; /* above everything */
+    transition: opacity .15s, transform .15s;
+}
+
+#aiPopup.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+#aiPopup.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+#aiCommandBox {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 360px;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+    z-index: 20000;
+    display: none;
+    font-family: "Poppins", sans-serif;
+}
+
+.ai-title {
+    font-size: 18px;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+#aiInput {
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    margin-bottom: 12px;
+}
+
+.ai-shortcuts {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.ai-shortcuts button {
+    flex: 1;
+    padding: 8px 0;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 13px;
+    color: white;
+}
+
+.ai-btn-explain { background: #4facfe; }
+.ai-btn-rewrite { background: #6c5ce7; }
+.ai-btn-extend  { background: #00b894; }
+
+#aiRunBtn {
+    width: 100%;
+    background: #0984e3;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+#aiCancelBtn {
+    margin-top: 8px;
+    width: 100%;
+    background: #d63031;
+    color: white;
+    padding: 8px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+#aiResultBox {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 380px;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+    display: none;
+    z-index: 20000;
+    font-family: "Poppins", sans-serif;
+}
+
+#aiResultContent {
+    background: #f7f8fa;
+    padding: 12px;
+    border-radius: 10px;
+    max-height: 200px;
+    overflow-y: auto;
+    margin-bottom: 14px;
+    font-size: 14px;
+    color: #333;
+}
+
+.ai-result-btn {
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    margin-top: 10px;
+    font-weight: 600;
+    font-size: 15px;
+    color: white;
+}
+
+.ai-replace-btn { background: #00b894; }
+.ai-discard-btn { background: #d63031; }
+
+#aiErrorBox {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    background: #ff5252;
+    color: white;
+    padding: 14px 18px;
+    border-radius: 12px;
+    font-size: 14px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    z-index: 99999;
+    display: none;
+}
+
+#aiBlockingOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.85);
+    z-index: 999999;
+    backdrop-filter: blur(2px);
+    display: none;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* COLOR VARIABLES */
+:root {
+    --hue: 223;
+    --primary100: hsl(var(--hue) 90% 95%);
+    --primary300: hsl(var(--hue) 90% 75%);
+    --primary500: hsl(var(--hue) 90% 55%);
+    --primary900: hsl(var(--hue) 90% 15%);
+}
+
+/* OVERLAY COVERING WHOLE PAGE */
+#aiBlockingOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.85);
+    z-index: 999999;
+    backdrop-filter: blur(2px);
+    display: none; /* hidden by default */
+}
+
+/* Center container */
+#aiBlockingLoader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* STACK ANIMATION */
+.stack {
+    width: 8em;
+    height: 26em;
+    position: relative;
+    overflow: hidden;
+}
+
+.stack__card {
+    position: absolute;
+    inset: 0;
+    width: 70%;
+    aspect-ratio: 1;
+    margin: auto;
+    transform: rotateX(45deg) rotateZ(-45deg);
+    transform-style: preserve-3d;
+}
+
+/* CARD 1 */
+.stack__card:nth-child(1)::before,
+.stack__card:nth-child(2)::before,
+.stack__card:nth-child(3)::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    display: block;
+    border-radius: 7.5%;
+    animation: card 2s infinite;
+    box-shadow: -0.5em 0.5em 1.5em hsl(var(--hue) 90% 15% / 0.1);
+}
+
+/* CARD COLORS + delays */
+.stack__card:nth-child(1)::before {
+    background: var(--primary500);
+}
+
+.stack__card:nth-child(2) {
+    top: 0;
+}
+.stack__card:nth-child(2)::before {
+    background: var(--primary300);
+    animation-delay: calc(2s * -0.95);
+}
+
+.stack__card:nth-child(3) {
+    top: -15%;
+}
+.stack__card:nth-child(3)::before {
+    background: var(--primary100);
+    animation-delay: calc(2s * -0.9);
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 0L1.03553 6.96447C0.372492 7.62751 0 8.52678 0 9.46447V9.54584C0 11.4535 1.54648 13 3.45416 13C4.1361 13 4.80278 12.7981 5.37019 12.4199L7.125 11.25L6 15V16H10V15L8.875 11.25L10.6298 12.4199C11.1972 12.7981 11.8639 13 12.5458 13C14.4535 13 16 11.4535 16 9.54584V9.46447C16 8.52678 15.6275 7.62751 14.9645 6.96447L8 0Z' fill='rgba(0,0,0,0.9)' /%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-size: 45% 45%;
+    background-position: center;
+}
+
+/* ANIMATION */
+@keyframes card {
+    0%, 100% {
+        transform: translateZ(0);
+    }
+    11% {
+        transform: translateZ(0.125em);
+        opacity: 1;
+    }
+    34% {
+        transform: translateZ(-12em);
+        opacity: 0;
+    }
+    48% {
+        transform: translateZ(12em);
+        opacity: 0;
+    }
+    57% {
+        transform: translateZ(0);
+        opacity: 1;
+    }
+    61% {
+        transform: translateZ(-1.8em);
+    }
+    74% {
+        transform: translateZ(0.6em);
+    }
+    87% {
+        transform: translateZ(-0.2em);
+    }
+}
 </style>
 
 <div class="note-container" id="noteContainer">
@@ -258,7 +553,217 @@ body {
 </div>
 <div class="fullscreen-overlay" id="fullscreenOverlay"></div>
 
+<div id="aiPopup" class="hidden">Ask AI ✨</div>
+
+<div id="aiBlockingOverlay">
+    <div id="aiBlockingLoader">
+        <div class="stack">
+            <div class="stack__card"></div>
+            <div class="stack__card"></div>
+            <div class="stack__card"></div>
+        </div>
+    </div>
+</div>
+
+<div id="aiCommandBox">
+    <div class="ai-title">Ask AI</div>
+
+    <input type="text" id="aiInput" placeholder="Type your command...">
+
+    <div class="ai-shortcuts">
+        <button class="ai-btn-explain" onclick="setAiShortcut('Explain this')">Explain</button>
+        <button class="ai-btn-rewrite" onclick="setAiShortcut('Rewrite clearly')">Rewrite</button>
+        <button class="ai-btn-extend" onclick="setAiShortcut('Extend this')">Extend</button>
+    </div>
+
+    <button id="aiRunBtn" onclick="submitAiCommand()">Run AI</button>
+    <button id="aiCancelBtn" onclick="closeAiBox()">Cancel</button>
+</div>
+
+<div id="aiResultBox">
+    <div style="font-size:18px;font-weight:600;margin-bottom:10px;">AI Result</div>
+    <div id="aiResultContent"></div>
+
+    <button class="ai-result-btn ai-replace-btn" onclick="applyAiReplace()">Replace Selection</button>
+    <button class="ai-result-btn ai-discard-btn" onclick="closeAiResult()">Discard</button>
+</div>
+
+<div id="aiErrorBox">AI is not available to generate your answer.</div>
+
+
 <script>
+    // AI SECTION >>>>>>>>>>>>>>>>>>>>>>
+let currentSelection = "";
+let currentQuill = null;
+let selectionIndex = null;
+
+document.addEventListener("mouseup", function () {
+    const selection = window.getSelection();
+    const text = selection.toString().trim();
+    const popup = document.getElementById("aiPopup");
+
+    if (!text) {
+        popup.classList.remove("visible");
+        return;
+    }
+
+    const range = selection.getRangeAt(0);
+    const rect = range.getBoundingClientRect();
+
+    const scrollX = window.scrollX || window.pageXOffset;
+    const scrollY = window.scrollY || window.pageYOffset;
+
+    popup.style.left = `${rect.left + rect.width / 2 + scrollX}px`;
+    popup.style.top  = `${rect.top - 45 + scrollY}px`;
+
+    popup.classList.remove("hidden");
+    popup.classList.add("visible");
+
+    // find editor
+    const editorEl = range.startContainer.parentElement.closest(".ql-editor");
+    if (!editorEl) return;
+
+    const editorId = editorEl.parentElement.id;
+    const found = notes.find(n => n.quill.root.parentElement.id === editorId);
+
+    currentQuill = found?.quill || null;
+    currentSelection = text;
+
+    // QUILL selection index
+    if (currentQuill) {
+        const q = currentQuill.getSelection();
+        if (q && q.length > 0) {
+            selectionIndex = q.index;
+            selectionLength = q.length;
+        }
+    }
+});
+
+
+document.getElementById("aiPopup").addEventListener("click", function () {
+    this.classList.remove("visible");
+    this.classList.add("hidden");
+
+    openAiCommandPopup();
+});
+
+function openAiCommandPopup() {
+    document.getElementById("aiCommandBox").style.display = "block";
+}
+
+function setAiShortcut(text) {
+    document.getElementById('aiInput').value = text;
+}
+
+function closeAiBox() {
+    document.getElementById("aiCommandBox").style.display = "none";
+}
+
+function submitAiCommand() {
+    const instruction = document.getElementById("aiInput").value.trim();
+    if (!instruction) return;
+
+    document.getElementById("aiCommandBox").style.display = "none";
+    runInlineAI(instruction);
+}
+
+function runInlineAI(instruction) {
+    if (!currentQuill || !currentSelection) return;
+
+    const prompt = `${instruction}:\n\n"${currentSelection}"`;
+
+    showAiBlocking(); // BLOCK EVERYTHING
+
+    fetch("/api/ai", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt })
+    })
+    .then(res => res.json())
+    .then(data => {
+
+        hideAiBlocking(); // UNBLOCK
+
+        if (!data || !data.answer) {
+            showAiError();
+            return;
+        }
+
+        const aiText = data.answer.trim();
+
+        document.getElementById("aiPopup").style.display = "none";
+
+        document.getElementById("aiResultContent").innerText = aiText;
+        document.getElementById("aiResultBox").style.display = "block";
+
+        window.lastAiText = aiText;
+    })
+    .catch(err => {
+        hideAiBlocking();
+        showAiError();
+    });
+}
+
+function applyAiReplace() {
+    if (!currentQuill || selectionIndex === null || selectionLength === null) {
+        closeAiResult();
+        return;
+    }
+
+    currentQuill.deleteText(selectionIndex, selectionLength);
+    currentQuill.insertText(selectionIndex, window.lastAiText);
+
+    closeAiResult();
+
+    // Reset
+    currentSelection = "";
+    selectionIndex = null;
+    selectionLength = null;
+}
+
+function showAiError() {
+    const box = document.getElementById("aiErrorBox");
+    box.style.display = "block";
+
+    setTimeout(() => {
+        box.style.display = "none";
+    }, 3000); // auto-hide after 3 sec
+}
+
+function closeAiError() {
+    document.getElementById("aiErrorBox").style.display = "none";
+}
+
+function closeAiResult() {
+    document.getElementById("aiResultBox").style.display = "none";
+}
+
+function replaceSelectedText(newText) {
+    if (selectionIndex == null || !currentQuill) return;
+
+    const oldLen = currentSelection.length;
+
+    // Remove old text
+    currentQuill.deleteText(selectionIndex, oldLen);
+
+    // Insert AI-generated text
+    currentQuill.insertText(selectionIndex, newText);
+
+    // Reset temp variables
+    currentSelection = "";
+    selectionIndex = null;
+}
+
+function showAiBlocking() {
+    document.getElementById("aiBlockingOverlay").style.display = "block";
+}
+
+function hideAiBlocking() {
+    document.getElementById("aiBlockingOverlay").style.display = "none";
+}
+// NOTES SECTION >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+
 const notes = [];
 let noteCounter = 0;
 const id_user = "{{ Auth::id() }}";

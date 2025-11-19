@@ -12,6 +12,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\RestoreEditController;
 use App\Http\Controllers\RestoreDeleteController;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\FriendController;
 
 /*
 |--------------------------------------------------------------------------
@@ -114,7 +115,18 @@ Route::delete('/pages/{id}/delete', [PageController::class, 'destroy']);
 Route::get('/profile', [UserController::class, 'profile'])
     ->middleware('check.permission:setting')
     ->name('profile');
-
 Route::post('/profile/update', [UserController::class, 'updateProfile'])
     ->middleware('check.permission:setting')
     ->name('profile.update');
+
+
+
+// ROUTE FRIEND
+Route::get('/friend', [FriendController::class, 'friend'])
+    ->middleware('check.permission:setting')
+    ->name('friend');
+Route::get('/add_friend', [FriendController::class, 'add_friend'])
+    ->middleware('check.permission:setting')
+    ->name('add_friend');
+ Route::get('/friend/search', [FriendController::class, 'search'])
+    ->name('friend.search');

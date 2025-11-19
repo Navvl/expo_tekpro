@@ -28,7 +28,7 @@
         </div>
 
         <div class="col-lg-4">
-            <div class="card border-0 shadow-sm rounded-4 h-100">
+            <div class="card border-0 shadow-sm rounded-4 h-100 stat-card">
                 <div class="card-body">
                     <h5 class="fw-bold mb-3">Today’s Highlights</h5>
                     <ul class="list-group list-group-flush">

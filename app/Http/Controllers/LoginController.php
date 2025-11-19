@@ -101,27 +101,32 @@ class LoginController extends Controller
     public function tambah_akun(Request $request)
     {
         try {
-            // Validasi inputan
             $request->validate([
                 'username' => 'required',
-                'password' => 'required',
+                'email' => 'required|email|unique:user,email',
+                'password' => 'required|min:4',
+                'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             ]);
 
-            // Simpan data ke tabel user
-            $user = new User(); // Ubah variabel dari $quiz menjadi $user untuk kejelasan
-            $user->username = $request->input('username');
-            $user->password = md5($request->input('password')); // Enkripsi password
-            $user->level = 'User'; // Tetapkan level ke "Murid"
+            $user = new User();
+            $user->username = $request->username;
+            $user->email = $request->email;
+            $user->password = $request->password;
+            $user->level = 'User';
 
-            // Simpan ke database
+            // Simpan foto ke storage/app/public/profile
+            if ($request->hasFile('foto')) {
+                $path = $request->file('foto')->store('profile', 'public');
+                $user->foto = $path; // contoh: "profile/xxxxx.jpg"
+            }
+
             $user->save();
 
-            // Redirect ke halaman lain
-            return redirect()->route('login')->with('success', 'Akun berhasil ditambahkan.'); // Menambahkan flash message untuk feedback
+            return redirect()->route('login')->with('success', 'Akun berhasil dibuat.');
+
         } catch (\Exception $e) {
-            Log::error('Gagal mengembalikan data pengguna: ' . $e->getMessage());
-            // Redirect kembali dengan pesan kesalahan
-            return redirect()->back()->withErrors(['msg' => 'Gagal menambahkan akun. Silakan coba lagi.']);
+            Log::error('Gagal membuat akun: ' . $e->getMessage());
+            return redirect()->back()->withErrors(['msg' => 'Gagal menambahkan akun.']);
         }
     }
 }

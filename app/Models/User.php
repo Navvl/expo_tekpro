@@ -25,6 +25,8 @@ class User extends Authenticatable
         'updated_at',
         'level',
         'email',
+        'id_friend',
+        'foto',
     ];
 
     protected $hidden = [

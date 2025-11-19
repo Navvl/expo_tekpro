@@ -83,30 +83,48 @@
                                     </a>
                                     <h2 class="mb-2 text-center">Sign Up</h2>
                                     <p class="text-center" style="margin-top:35px;">Create your Noive account.</p>
-                                    <form method="POST" action="{{ route('tambah_akun') }}">
-                                        @csrf
-                                        <div class="row">
-                                            <div class="col-lg-6">
-                                                <div class="form-group">
-                                                    <label for="username" class="form-label">Username</label>
-                                                    <input type="text" class="form-control" id="username" name="username" placeholder=" ">
-                                                </div>
-                                            </div>
-                                       
-                                            <div class="col-lg-6">
-                                                <div class="form-group">
-                                                    <label for="password" class="form-label">Password</label>
-                                                    <input type="password" class="form-control" name="password" id="password" placeholder=" ">
-                                                </div>
+                                   <form method="POST" action="{{ route('tambah_akun') }}" enctype="multipart/form-data">
+                                    @csrf
+
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label for="username" class="form-label">Username</label>
+                                                <input type="text" class="form-control" id="username" name="username" required>
                                             </div>
                                         </div>
-                                        <div class="d-flex justify-content-center">
-                                            <button type="submit" class="btn btn-primary">Sign Up</button>
+
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label for="email" class="form-label">Email</label>
+                                                <input type="email" class="form-control" id="email" name="email" required>
+                                            </div>
                                         </div>
-                                        <p class="mt-3 text-center">
-                                            Already have an Account <a href="{{ route('login') }}" class="text-underline">Sign In</a>
-                                        </p>
-                                    </form>
+
+                                        <div class="col-lg-6 mt-3">
+                                            <div class="form-group">
+                                                <label for="password" class="form-label">Password</label>
+                                                <input type="password" class="form-control" name="password" id="password" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-6 mt-3">
+                                            <div class="form-group">
+                                                <label for="foto" class="form-label">Profile Picture</label>
+                                                <input type="file" class="form-control" id="foto" name="foto" accept="image/*">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex justify-content-center mt-4">
+                                        <button type="submit" class="btn btn-primary">Sign Up</button>
+                                    </div>
+
+                                    <p class="mt-3 text-center">
+                                        Already have an account? 
+                                        <a href="{{ route('login') }}" class="text-underline">Sign In</a>
+                                    </p>
+                                </form>
                                 </div>
                             </div>
                         </div>
