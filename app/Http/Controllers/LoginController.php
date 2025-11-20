@@ -11,7 +11,9 @@ class LoginController extends Controller
 {
     public function login()
     {
-        $this->generateCaptcha();
+        if (!Session::has('captcha')) {
+            $this->generateCaptcha();
+        }
         echo view('login');
     }
 
@@ -57,7 +59,7 @@ class LoginController extends Controller
             Session::put('id', $user->id_user);
             Session::put('level', $user->level);
             Session::put('username', $user->username);
-
+            
             return redirect()->route('dashboard');
         }
 
@@ -117,7 +119,7 @@ class LoginController extends Controller
             // Simpan foto ke storage/app/public/profile
             if ($request->hasFile('foto')) {
                 $path = $request->file('foto')->store('profile', 'public');
-                $user->foto = $path; // contoh: "profile/xxxxx.jpg"
+                $user->foto = basename($path); // contoh: "profile/xxxxx.jpg"
             }
 
             $user->save();

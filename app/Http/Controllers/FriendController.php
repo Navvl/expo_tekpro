@@ -65,7 +65,7 @@ class FriendController extends BaseController
                   ->orWhere('email', 'LIKE', "%$keyword%");
             })
             ->limit(10)
-            ->get(['id_user', 'username', 'email']);
+            ->get(['id_user', 'username', 'email', 'foto']);
 
         return response()->json($results);
     }

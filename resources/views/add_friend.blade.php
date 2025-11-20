@@ -148,7 +148,7 @@ function displayFriendResults(data) {
         item.className = "friend-item";
 
         item.innerHTML = `
-            <img src="https://i.pravatar.cc/100?u=${user.id_user}" class="friend-avatar">
+            <img src="/storage/profile/${user.foto}" class="friend-avatar">
 
             <div class="friend-info">
                 <div class="friend-name">${user.username}</div>

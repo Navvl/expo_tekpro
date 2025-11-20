@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Http\UploadedFile;
 
 class UserController extends BaseController
 {
@@ -216,7 +216,12 @@ class UserController extends BaseController
         // Update name & email
         $user->username = $request->username;
         $user->email = $request->email;
-
+        if ($request->hasFile('foto')) {
+            $file = $request->file('foto');
+            $filename = $file->getClientOriginalName();
+            $file->storeAs('public/profile/', $filename);
+            $user->foto = $filename;
+        }
         // Handle password change only if filled
         if (!empty($request->password)) {
 

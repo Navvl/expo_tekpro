@@ -10,6 +10,7 @@ use App\Models\ActivityLog;
 use App\Models\User;
 use App\Models\Room;
 use App\Models\Note;
+use App\Models\Page;
 use App\Models\UserHistory;
 use App\Models\Keterlambatan;
 use Illuminate\Support\Facades\Session;
@@ -25,7 +26,10 @@ class NoteController extends BaseController
     public function note($id_room)
     {
         $room = Room::findOrFail($id_room);
-        $note = Note::where('id_room', $id_room)->get();
+        $note = Note::where('id_room', $id_room)->get()->map(function ($item) {
+            $item->pages_count = Page::where('pages_code', $item->pages_code)->count();
+            return $item;
+        });
 
         ActivityLog::create([
             'action' => 'view',

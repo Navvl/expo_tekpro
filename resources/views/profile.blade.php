@@ -16,7 +16,7 @@
                     <div class="text-center mb-3">
                         <img 
                             id="previewPhoto" 
-                            src="{{ $user->foto ? asset('storage/' . $user->foto) : asset('default-avatar.png') }}"
+                            src="{{ $user->foto ? asset('storage/profile/' . $user->foto) : asset('default-avatar.png') }}"
                             class="img-thumbnail rounded-circle"
                             style="width: 120px; height: 120px; object-fit: cover;"
                         >

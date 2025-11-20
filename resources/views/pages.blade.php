@@ -243,6 +243,10 @@ body {
     color: #fff !important;
 }
 
+.swal2-container {
+    z-index: 999999 !important;
+}
+
 @media (max-width: 800px) {
     .note-container {
         grid-template-columns: 1fr;
@@ -850,7 +854,6 @@ async function createNote() {
             page_id: id_page,
             isEditing: false
         });
-
         quill.on('text-change', () => updateNoteContent(noteId));
 
     } catch (err) {
@@ -1043,7 +1046,7 @@ function loadPages() {
                     id_user: id_user,
                     page_id: page.id_page 
                 });
-
+                
                 quill.on('text-change', function() {
                     updateNoteContent(noteId);
                 });
@@ -1088,9 +1091,10 @@ function deleteNote(noteId, note_ids) {
         showNotification('error', 'Note ID not found. Please refresh the page.');
         return;
     }
-
+    const overlay = document.getElementById('fullscreenOverlay');
+    
     Swal.fire({
-        title: 'Delete this note?',
+        title: 'Delete this page?',
         text: "Once deleted, it cannot be restored.",
         icon: 'warning',
         showCancelButton: true,
@@ -1118,19 +1122,34 @@ function deleteNote(noteId, note_ids) {
             .then(response => response.json())
             .then(result => {
                 if (result.success) {
-                    notes.splice(notes.findIndex(n => n.id_page === noteId), 1);
+
+                    // Hapus dari notes[] berdasarkan page_id
+                    const index = notes.findIndex(n => Number(n.page_id) === Number(noteId));
+                    if (index !== -1) {
+                        notes.splice(index, 1);
+                    } else {
+                        console.warn("deleteNote: page_id not found in notes[]", noteId);
+                    }
 
                     const card = document.querySelector(`[data-note-id="${note_ids}"]`);
                     if (card) {
                         card.style.transition = 'opacity 0.4s ease, transform 0.3s ease';
                         card.style.opacity = '0';
                         card.style.transform = 'scale(0.95)';
-                        setTimeout(() => card.remove(), 400);
+                        if (card.classList.contains("fullscreen")) {
+                            card.classList.remove("fullscreen", "fullscreen-enter", "fullscreen-exit");
+                            document.getElementById("fullscreenOverlay").classList.remove("active");
+                        }
+
+                        setTimeout(() => {
+                            card.remove();
+                            rebuildCardState();
+                        }, 400);
                     }
 
                     showNotification('success', 'Note deleted successfully');
                 } else {
-                    showNotification('error', result.message || 'Failed to delete note');
+                    showNotification('error', result.message || 'Failed to delete pages');
                 }
             })
             .catch(() => {
@@ -1166,7 +1185,18 @@ function showNotification(type, message) {
     });
 }
 
+function rebuildCardState() {
+    cardStates = {};  
+
+    document.querySelectorAll(".note-card").forEach(card => {
+        const id = card.dataset.id;
+        cardStates[id] = { isEditing: false };
+    });
+}
+
+
 document.getElementById('addNoteBtn').addEventListener('click', createNote);
+
 loadPages();
 </script>
 

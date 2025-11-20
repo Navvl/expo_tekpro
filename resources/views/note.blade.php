@@ -31,7 +31,7 @@
                                     </a>
 
                                 </td>
-                                <td>{{ $data->pages_code }}</td>
+                                <td>{{ $data->pages_count }}</td>
                             </tr>
                             @endforeach
                         </tbody>
