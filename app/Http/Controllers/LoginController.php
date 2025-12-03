@@ -11,86 +11,138 @@ class LoginController extends Controller
 {
     public function login()
     {
-        if (!Session::has('captcha')) {
-            $this->generateCaptcha();
+
+        if (!session()->isStarted()) {
+            session()->start();
         }
-        echo view('login');
+        
+        $this->generateCaptcha();
+        
+        Log::info("Login page accessed - Session ID: " . session()->getId());
+        Log::info("Captcha generated: " . Session::get('captcha'));
+        
+        return view('login');
     }
 
     public function aksi_login(Request $request)
     {
-        // Basic validation
+
         $request->validate([
             'username' => 'required|string',
             'password' => 'required|string',
         ]);
-
-        Log::info("=== LOGIN START ===");
-    Log::info("Username input: {$request->username}");
-        Log::info("Session ID: " . session_id());
-        Log::info("Session content: " . json_encode(session()->all()));
-
-        // CAPTCHA check
+    
         if ($request->filled('backup_captcha')) {
             $sessionCaptcha = Session::get('captcha');
 
-            Log::info("User captcha input: {$request->backup_captcha}");
-            Log::info("Session captcha: {$sessionCaptcha}");
-
-            if ($request->backup_captcha !== $sessionCaptcha) {
-                Log::warning("CAPTCHA FAILED: user={$request->backup_captcha}, session={$sessionCaptcha}");
-                return back()->withErrors(['backup_captcha' => 'Invalid CAPTCHA'])->withInput();
+            if (!$sessionCaptcha) {
+                return back()
+                    ->withErrors(['backup_captcha' => 'CAPTCHA expired. Please try again.'])
+                    ->withInput($request->only('username'));
             }
+
+            if (strtolower($request->backup_captcha) !== strtolower($sessionCaptcha)) {
+                
+                $this->generateCaptcha();
+                
+                return back()
+                    ->withErrors(['backup_captcha' => 'Invalid CAPTCHA'])
+                    ->withInput($request->only('username'));
+            }
+            
         }
 
         $user = User::where('username', $request->username)->first();
 
         if (!$user) {
-            Log::warning("USER NOT FOUND: {$request->username}");
-        } else {
-            Log::info("User found: {$user->username}");
-        }
-
-        // Password check
-        if ($user && $request->password === $user->password) {
-
-            Log::info("LOGIN SUCCESS: {$user->username}");
-
-            Session::put('id', $user->id_user);
-            Session::put('level', $user->level);
-            Session::put('username', $user->username);
             
-            return redirect()->route('dashboard');
+            if ($request->filled('backup_captcha')) {
+                $this->generateCaptcha();
+            }
+            
+            return back()
+                ->withErrors(['loginError' => 'Invalid username or password'])
+                ->withInput($request->only('username'));
         }
 
-        Log::warning("LOGIN FAILED: bad credentials for {$request->username}");
+        if ($user && md5($request->password) === $user->password) {
 
-        return back()->withErrors(['loginError' => 'Invalid username or password'])->withInput();
+            $request->session()->regenerate();
+            
+            Session::forget('captcha');
+            
+            $request->session()->put([
+                'id' => $user->id_user,
+                'level' => $user->level,
+                'username' => $user->username,
+                'logged_in' => true,
+                'login_time' => now()->timestamp
+            ]);
+            
+            $request->session()->save();
+            
+            return redirect()->intended(route('dashboard'));
+        }
+        
+        if ($request->filled('backup_captcha')) {
+            $this->generateCaptcha();
+        }
+        
+        return back()
+            ->withErrors(['loginError' => 'Invalid username or password'])
+            ->withInput($request->only('username'));
     }
-
 
     private function generateCaptcha()
     {
-        $captcha_code = substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyz"), 0, 6);
-        Session::put('captcha', $captcha_code); // Simpan CAPTCHA ke sesi
+        $captcha_code = substr(str_shuffle("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 6);
+        Session::put('captcha', $captcha_code);
+        Session::save();
+        
+        return $captcha_code;
     }
 
     public function captcha()
     {
+
+        if (!session()->isStarted()) {
+            session()->start();
+        }
+        
         $captcha_code = Session::get('captcha');
+        
+        if (!$captcha_code) {
+            $captcha_code = $this->generateCaptcha();
+        }
+        
         header('Content-Type: image/png');
-        $image = imagecreatetruecolor(120, 40);
+        header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+        header('Cache-Control: post-check=0, pre-check=0', false);
+        header('Pragma: no-cache');
+        
+        $image = imagecreatetruecolor(150, 50);
         $background_color = imagecolorallocate($image, 255, 255, 255);
         $text_color = imagecolorallocate($image, 0, 0, 0);
-        imagefilledrectangle($image, 0, 0, 120, 40, $background_color);
-        imagestring($image, 5, 10, 10, $captcha_code, $text_color);
+        $line_color = imagecolorallocate($image, 200, 200, 200);
+        
+        imagefilledrectangle($image, 0, 0, 150, 50, $background_color);
+        
+        for ($i = 0; $i < 5; $i++) {
+            imageline($image, rand(0, 150), rand(0, 50), rand(0, 150), rand(0, 50), $line_color);
+        }
+        
+        imagestring($image, 5, 35, 15, $captcha_code, $text_color);
+        
         imagepng($image);
         imagedestroy($image);
+        exit; 
     }
+
+
 
     public function logout()
     {
-        Session::flush(); // Hapus semua session
+        Session::flush();
         return redirect()->route('login')->with('success', 'Logout successful');
     }
 

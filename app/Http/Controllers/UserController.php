@@ -230,14 +230,15 @@ class UserController extends BaseController
                 return back()->withErrors(['msg' => 'You must enter your current password.'])->withInput();
             }
 
-            // Compare plain password
-            if ($request->current_password !== $user->password) {
+            // Compare hashed password (MD5 legacy)
+            if (md5($request->current_password) !== $user->password) {
                 return back()->withErrors(['msg' => 'Old password is incorrect.'])->withInput();
             }
 
-            // Update new password directly (plain)
-            $user->password = $request->password;
+            // Save new password using bcrypt (lebih aman)
+            $user->password = bcrypt($request->password);
         }
+
 
         $user->save();
 
