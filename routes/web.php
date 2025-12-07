@@ -101,7 +101,9 @@ Route::get('/note/{id_room}', [NoteController::class, 'note'])
     ->middleware('check.permission:setting')
     ->name('note');
 Route::post('/t_note', [NoteController::class, 't_note'])->name('t_note');
+Route::post('/e_note/{id_note}', [NoteController::class, 'e_note'])->name('e_note');
 Route::post('/note/store', [NoteController::class, 'store'])->name('note.store');
+Route::delete('/delete_note/{id_note}', [NoteController::class, 'delete_note']);
 
 //ROUTE PAGE
 Route::post('/page/store', [PageController::class, 'store'])->name('page.store');

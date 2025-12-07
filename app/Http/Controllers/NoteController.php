@@ -77,4 +77,50 @@ class NoteController extends BaseController
         }
     }
 
+    public function e_note(Request $request, $id_note)
+    {
+        ActivityLog::create([
+            'action' => 'update',
+            'user_id' => Session::get('id'),
+            'description' => 'User mengubah nama Note.',
+        ]);
+
+        try {
+
+            $request->validate([
+                'note_title' => 'required|string',
+            ]);
+
+            $note = Note::findOrFail($id_note);
+
+            $note->note_title = $request->note_title;
+            $note->save();
+
+            return redirect()->back()->with('success', 'Nama note berhasil diupdate');
+
+        } catch (\Exception $e) {
+
+            return redirect()->back()->withErrors(['msg' => 'Gagal update nama note.']);
+        }
+    }
+
+    public function delete_note($id_note)
+    {
+        try {
+            $note = Note::findOrFail($id_note);
+
+            ActivityLog::create([
+                'action'      => 'delete',
+                'user_id'     => Session::get('id'),
+                'description' => 'User menghapus Note: ' . $note->note_title,
+            ]);
+
+            $note->delete();
+
+            return redirect()->back()->with('success', 'Note berhasil dihapus.');
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['msg' => 'Gagal menghapus note.']);
+        }
+    }
+
 }
