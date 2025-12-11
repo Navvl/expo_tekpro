@@ -54,7 +54,7 @@
                                     <small>Created at: {{ $value->created_at }}</small>
                                 </p>
 
-                                <a href="#" class="btn btn-primary btn-sm">Open</a>
+                                <a href="{{ route('note', ['id_room' => $value->id_room]) }}" class="btn btn-primary btn-sm">Open</a>
 
                             </div>
 

@@ -10,6 +10,7 @@ use App\Models\ActivityLog;
 use App\Models\User;
 use App\Models\Room;
 use App\Models\Note;
+use App\Models\Access;
 use App\Models\Page;
 use App\Models\UserHistory;
 use App\Models\Keterlambatan;
@@ -26,6 +27,32 @@ class NoteController extends BaseController
     public function note($id_room)
     {
         $room = Room::findOrFail($id_room);
+
+        $loginId = Session::get('id');
+
+        if ($room->id_user != $loginId) {
+
+            if ($room->id_access) {
+
+                $access = Access::find($room->id_access);
+
+                if ($access) {
+
+                    $allowedUsers = explode(',', $access->id_user);
+
+                    if (!in_array($loginId, $allowedUsers)) {
+                        return abort(403, 'You do not have access to this room.');
+                    }
+                } else {
+                    return abort(403, 'Access configuration not found.');
+                }
+
+            } else {
+                return abort(403, 'You do not have access to this room.');
+            }
+        }
+
+        // --- Jika lolos akses → ambil halaman dan note ---
         $note = Note::where('id_room', $id_room)->get()->map(function ($item) {
             $item->pages_count = Page::where('pages_code', $item->pages_code)->count();
             return $item;
@@ -33,7 +60,7 @@ class NoteController extends BaseController
 
         ActivityLog::create([
             'action' => 'view',
-            'user_id' => Session::get('id'),
+            'user_id' => $loginId,
             'description' => 'User membuka room ' . $room->room_title,
         ]);
 
@@ -42,6 +69,7 @@ class NoteController extends BaseController
         echo view('note', compact('note', 'room'));
         echo view('footer');
     }
+
 
     public function t_note(Request $request)
     {

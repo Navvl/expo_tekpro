@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Page;
 use App\Models\Note;
+use App\Models\Room;
+use App\Models\Access;
+use Illuminate\Support\Facades\Session;
+
 use Illuminate\Support\Facades\Auth;
 
 class PageController extends Controller
@@ -12,20 +16,42 @@ class PageController extends Controller
 
     public function pages($id)
     {
-        // Ambil data note berdasarkan id
         $note = Note::findOrFail($id);
+        $loginId = Session::get('id');
 
-        // Ambil semua page yang memiliki pages_code sama dengan note ini
+        $room = Room::findOrFail($note->id_room);
+
+        if ($room->id_user != $loginId) {
+
+            if ($room->id_access) {
+
+                $access = Access::find($room->id_access);
+
+                if ($access) {
+                    $allowedUsers = explode(',', $access->id_user);
+
+                    if (!in_array($loginId, $allowedUsers)) {
+                        return abort(403, 'You do not have access to these pages.');
+                    }
+                } else {
+                    return abort(403, 'Access permission data not found.');
+                }
+
+            } else {
+                return abort(403, 'You do not have access to these pages.');
+            }
+        }
+
         $pages = Page::where('pages_code', $note->pages_code)
                     ->orderBy('created_at', 'asc')
                     ->get();
-        // dd(compact('note', 'pages'));
-        // Tampilkan ke view
+
         echo view('header');
         echo view('menu');
         echo view('pages', compact('note', 'pages'));
         echo view('footer');
     }
+
 
     public function store(Request $request)
     {
