@@ -8,6 +8,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use App\Models\ActivityLog;
 use App\Models\User;
+use App\Models\Friend;
 use App\Models\Room;
 use App\Models\Access;
 use App\Models\UserHistory;
@@ -26,7 +27,7 @@ class RoomController extends BaseController
     {
         ActivityLog::create([
             'action' => 'create',
-            'user_id' => Session::get('id'), // ID pengguna yang sedang login
+            'user_id' => Session::get('id'),
             'description' => 'User Masuk Ke My Room.',
         ]);
         $currentUserId = Session::get('id');
@@ -34,10 +35,22 @@ class RoomController extends BaseController
         $room = Room::with('user')
             ->where('id_user', $currentUserId)
             ->get();
-        $allUsers = User::all();
+        $friends = Friend::where('status', 1)
+                        ->where(function($query) use ($currentUserId) {
+                            $query->where('friend.id_user', $currentUserId)
+                                ->orWhere('id_user_friended', $currentUserId);
+                        })
+                        ->join('user', function($join) use ($currentUserId) {
+                            $join->on('user.id_user', '=', 'friend.id_user')
+                                ->orOn('user.id_user', '=', 'friend.id_user_friended');
+                        })
+                        ->where('user.id_user', '<>', $currentUserId)
+                        ->select('user.id_user', 'user.username', 'user.email', 'user.foto')
+                        ->distinct()
+                        ->get();
         echo view('header');
         echo view('menu');
-        echo view('myroom', compact('room','allUsers'));
+        echo view('myroom', compact('room','friends'));
         echo view('footer');
     }
 

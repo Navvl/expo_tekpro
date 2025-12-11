@@ -132,3 +132,15 @@ Route::get('/add_friend', [FriendController::class, 'add_friend'])
     ->name('add_friend');
  Route::get('/friend/search', [FriendController::class, 'search'])
     ->name('friend.search');
+Route::post('/friend/add', [FriendController::class, 'store_friend'])
+    ->name('friend.add');
+Route::post('/friend/search_friend_accept', [FriendController::class, 'search_friend_accept'])
+    ->name('friend.search.friend.accept');
+Route::post('/friend-request/accept/{id}', [FriendController::class, 'accept']);
+Route::post('/friend-request/reject/{id}', [FriendController::class, 'reject']);
+Route::get('/friend/pending-count', [FriendController::class, 'pendingCount']);
+Route::delete('/unfriend/{id_friend}', [FriendController::class, 'unfriend']);
+
+
+
+

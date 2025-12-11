@@ -190,7 +190,7 @@
 
 
 @php
-    $USERS_JSON = $allUsers->map(function($u) {
+    $USERS_JSON = $friends->map(function($u) {
         return [
             'id' => (string)$u->id_user,
             'name' => $u->username,
