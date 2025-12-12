@@ -65,7 +65,10 @@ class LoginController extends Controller
                 ->withInput($request->only('username'));
         }
 
-        if ($user && md5($request->password) === $user->password) {
+        // Password check
+        if ($user && $request->password === $user->password) {
+
+            Log::info("============ LOGIN SUCCESS: {$user->username} ============");
 
             $request->session()->regenerate();
             

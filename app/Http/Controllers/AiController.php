@@ -9,37 +9,29 @@ class AiController extends Controller
 {
     public function ask(Request $request)
     {
-        try {
-            $prompt = $request->input('prompt');
+        $prompt = $request->input('prompt');
 
-            if (!$prompt) {
-                return response()->json([
-                    'error' => 'Prompt is required'
-                ], 400);
-            }
-
-            $response = Http::post('http://localhost:11434/api/generate', [
-                'model' => 'tinyllama',
-                'prompt' => $prompt,
-                'stream' => false
-            ]);
-
-            if ($response->failed()) {
-                return response()->json([
-                    'error' => 'AI server failed',
-                    'details' => $response->body()
-                ], 500);
-            }
-
-            return response()->json([
-                'answer' => $response->json()['response'] ?? ''
-            ]);
-
-        } catch (\Throwable $e) {
-            return response()->json([
-                'error' => 'Laravel internal error',
-                'message' => $e->getMessage()
-            ], 500);
+        if (!$prompt) {
+            return response()->json(['error' => 'Prompt required'], 400);
         }
+
+        $finalPrompt = "Tolong kerjakan sesuai instruksi berikut, dan JANGAN menambahkan penjelasan apapun.\n\n".
+            "=== INSTRUKSI ===\n".
+            $prompt . "\n\n".
+            "=== OUTPUT ===\n".
+            "Berikan hasilnya langsung tanpa tambahan kalimat lain.";
+
+        $response = Http::post("http://localhost:11434/api/generate", [
+            // "model" => "gpt-oss:120b-cloud",
+            "model" => "gemma3:1b",
+            "prompt" => $finalPrompt,
+            "stream" => false
+        ]);
+
+        return response()->json([
+            "answer" => $response->json("response")
+        ]);
     }
+
+
 }

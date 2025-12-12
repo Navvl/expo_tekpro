@@ -21,7 +21,6 @@ $userId = Session::get('id');
                         <rect x="10.5366" y="16.3945" width="16" height="4" rx="2" transform="rotate(45 10.5366 16.3945)" fill="currentColor" />
                         <rect x="10.5562" y="-0.556152" width="28" height="4" rx="2" transform="rotate(45 10.5562 -0.556152)" fill="currentColor" />
                     </svg> -->
-                    <img src="{{ asset('storage/logos/' . optional(App\Models\Setting::first())->logo) }}" alt="Logo" style="max-width: 25px;">
 
                 </div>
                 <div class="logo-mini">
@@ -336,8 +335,7 @@ $userId = Session::get('id');
 @endphp
                         <li class="nav-item dropdown">
                             <a class="py-0 nav-link d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <img src="{{ $user && $user->foto ? asset('storage/profile/' . $user->foto) : asset('images/avatars/01.png') }}" alt="User-Profile"class="theme-color-default-img img-fluid avatar avatar-50 avatar-rounded">
-
+                                <img src="{{ asset ('images/avatars/01.png') }}" alt="User-Profile" class="theme-color-default-img img-fluid avatar avatar-50 avatar-rounded">
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                 <li><a class="dropdown-item" href="{{ route('profile') }}">Profile</a></li>

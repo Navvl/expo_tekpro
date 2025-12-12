@@ -16,7 +16,7 @@ body {
 }
 
 .note-card {
-    background: #fff;
+    background: #343A37;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     overflow: hidden;
@@ -87,7 +87,12 @@ body {
     flex: 1;
     overflow-y: auto;
     line-height: 1.6;
-    color: #333;
+    color: #fff;
+}
+
+.note-content .p {
+    border-bottom: 1px solid;
+    border-color:white;
 }
 
 .note-content.empty {
@@ -122,6 +127,11 @@ body {
 
 .editor-box .ql-editor {
     min-height: 150px;
+    background-color: #343A37;
+}
+
+.ql-toolbar{
+    background-color: #fff;
 }
 
 .add-note-btn {
@@ -243,10 +253,6 @@ body {
     color: #fff !important;
 }
 
-.swal2-container {
-    z-index: 999999 !important;
-}
-
 @media (max-width: 800px) {
     .note-container {
         grid-template-columns: 1fr;
@@ -254,6 +260,59 @@ body {
 }
 
 /* AI STYLEE >>>>>>>>>>>>> */
+.ai-typing {
+    opacity: 0;
+    transition: opacity 0.25s ease-out;
+}
+
+.ai-typing.visible {
+    opacity: 1;
+}
+
+/* bubble AI hover effect */
+.ai-chat-bubble:not(.ai-chat-user) {
+    position: relative;
+    transition: background 0.15s ease, box-shadow 0.15s ease;
+    cursor: pointer;
+}
+
+.ai-chat-bubble:not(.ai-chat-user):hover {
+    background: #383838;
+    box-shadow: 0 0 10px rgba(255,255,255,0.15);
+}
+
+/* action menu floating */
+/* menu inserted under input row (flow mode) */
+.ai-bubble-action-menu {
+    background: #2d2d2d;
+    padding: 8px 12px;
+    border-radius: 8px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.45);
+    z-index: 999999;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+/* style button inside menu */
+.ai-bubble-action-menu button {
+    background: #00b894;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+}
+.ai-bubble-action-menu button:hover { filter: brightness(1.06); }
+
+
+@keyframes fadeMenu {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 #aiPopup {
     position: fixed !important;
     background: white;
@@ -282,122 +341,194 @@ body {
     pointer-events: none;
 }
 
+/* command box main (tetap fixed but positioned by JS openAiCommandPopup) */
 #aiCommandBox {
     position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 360px;
-    background: #ffffff;
-    border-radius: 16px;
-    padding: 20px;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+    transform: none;
+    width: 50%;
+    min-width: 320px;
+    max-width: 900px;
+    background: #1E1F1E;
+    border: 1px solid #333;
+    border-radius: 14px;
+    padding: 12px 14px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.35);
     z-index: 20000;
     display: none;
     font-family: "Poppins", sans-serif;
+    overflow: visible; /* penting supaya result panel bisa muncul */
 }
 
-.ai-title {
-    font-size: 18px;
+/* chat messages container (above the input row) */
+#aiChatMessages {
+    max-height: 300px;
+    overflow-y: auto;
     margin-bottom: 10px;
-    font-weight: 600;
+    padding-right: 6px;
 }
 
-#aiInput {
-    width: 100%;
-    padding: 10px;
-    border-radius: 10px;
-    border: 1px solid #ddd;
-    font-size: 14px;
-    margin-bottom: 12px;
-}
-
-.ai-shortcuts {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 12px;
-}
-
-.ai-shortcuts button {
-    flex: 1;
-    padding: 8px 0;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 500;
-    font-size: 13px;
+/* bubble styles */
+.ai-chat-bubble {
+    background: #2b2b2b;
     color: white;
+    padding: 10px 14px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    font-size: 14px;
+    line-height: 1.4;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    word-break: break-word;
 }
 
-.ai-btn-explain { background: #4facfe; }
-.ai-btn-rewrite { background: #6c5ce7; }
-.ai-btn-extend  { background: #00b894; }
+.ai-chat-user {
+    background: #3d3d3d;
+    text-align: right;
+}
 
+/* input row buttons */
 #aiRunBtn {
-    width: 100%;
+    margin-left: 8px;
     background: #0984e3;
     color: white;
-    padding: 10px;
+    padding: 8px 12px;
     border: none;
     border-radius: 10px;
     cursor: pointer;
     font-weight: 600;
-    font-size: 15px;
 }
 
 #aiCancelBtn {
-    margin-top: 8px;
-    width: 100%;
+    margin-left: 8px;
     background: #d63031;
     color: white;
-    padding: 8px;
+    padding: 8px 12px;
     border: none;
     border-radius: 10px;
     cursor: pointer;
-    font-weight: 500;
+    font-weight: 600;
 }
 
+/* row tetap compact */
+.ai-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: -10px;
+}
+
+/* wrapper around input so spinner sits inside right side */
+.ai-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+/* input stays the same but ensure padding-right so spinner doesn't overlap text */
+#aiInput {
+  flex: 1;
+  padding: 10px 44px 10px 12px; /* right padding to leave room for spinner/text */
+  border-radius: 8px;
+  border: none;
+  background: #2A2A2A;
+  color: white;
+  font-size: 14px;
+  outline: none;
+}
+
+/* spinner circle (CSS only) — hidden by default */
+.ai-spinner {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.12);
+  border-top-color: white;
+  position: absolute;
+  right: 12px;
+  display: none;
+  box-sizing: border-box;
+  animation: aiSpin 0.9s linear infinite;
+}
+
+/* thinking text sits left of spinner, hidden by default */
+.ai-thinking-text {
+  position: absolute;
+  right: 40px;
+  font-size: 13px;
+  color: #d0d0d0;
+  display: none;
+  white-space: nowrap;
+}
+
+/* show states when thinking */
+.ai-input-wrap.thinking .ai-spinner,
+.ai-input-wrap.thinking .ai-thinking-text {
+  display: inline-block;
+}
+
+/* optionally dim input text while thinking */
+.ai-input-wrap.thinking #aiInput {
+  color: #9b9b9b;
+}
+
+/* spinner animation */
+@keyframes aiSpin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* result panel (kept for compatibility; hidden in chat-mode) */
 #aiResultBox {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 380px;
-    background: #ffffff;
-    border-radius: 16px;
-    padding: 20px;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.25);
-    display: none;
-    z-index: 20000;
-    font-family: "Poppins", sans-serif;
+    width: 100%;
+    background: #232424;
+    border-radius: 10px;
+    margin-top: 12px;
+    padding: 12px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+    color: #e8e8e8;
+    display: none; /* kept hidden by default */
+    max-height: 320px;
+    overflow: auto;
 }
 
 #aiResultContent {
     background: #f7f8fa;
     padding: 12px;
-    border-radius: 10px;
-    max-height: 200px;
-    overflow-y: auto;
-    margin-bottom: 14px;
+    border-radius: 8px;
+    color: #222;
     font-size: 14px;
-    color: #333;
+    margin-bottom: 12px;
+}
+
+/* result actions */
+.ai-result-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
 }
 
 .ai-result-btn {
-    width: 100%;
-    padding: 10px;
-    border-radius: 10px;
+    padding: 8px 12px;
+    border-radius: 8px;
     border: none;
     cursor: pointer;
-    margin-top: 10px;
     font-weight: 600;
-    font-size: 15px;
+    font-size: 14px;
     color: white;
 }
 
 .ai-replace-btn { background: #00b894; }
 .ai-discard-btn { background: #d63031; }
 
+#aiResultBox.fade-in {
+    animation: aiFadeIn .18s ease;
+}
+@keyframes aiFadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* error box + overlay (kept but overlay won't be shown by code) */
 #aiErrorBox {
     position: fixed;
     top: 30px;
@@ -430,7 +561,7 @@ body {
     box-sizing: border-box;
 }
 
-/* COLOR VARIABLES */
+/* COLOR VARIABLES (kept) */
 :root {
     --hue: 223;
     --primary100: hsl(var(--hue) 90% 95%);
@@ -439,27 +570,13 @@ body {
     --primary900: hsl(var(--hue) 90% 15%);
 }
 
-/* OVERLAY COVERING WHOLE PAGE */
-#aiBlockingOverlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.85);
-    z-index: 999999;
-    backdrop-filter: blur(2px);
-    display: none; /* hidden by default */
-}
-
-/* Center container */
+/* keep overlay loader styles (unused visually unless you decide later) */
 #aiBlockingLoader {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
 }
-
 /* STACK ANIMATION */
 .stack {
     width: 8em;
@@ -570,113 +687,226 @@ body {
 </div>
 
 <div id="aiCommandBox">
-    <div class="ai-title">Ask AI</div>
+    <div id="aiChatMessages"></div>
 
-    <input type="text" id="aiInput" placeholder="Type your command...">
+    <div class="ai-row">
 
-    <div class="ai-shortcuts">
-        <button class="ai-btn-explain" onclick="setAiShortcut('Explain this')">Explain</button>
-        <button class="ai-btn-rewrite" onclick="setAiShortcut('Rewrite clearly')">Rewrite</button>
-        <button class="ai-btn-extend" onclick="setAiShortcut('Extend this')">Extend</button>
+        <div class="ai-icon">✨</div>
+
+        <div class="ai-input-wrap">
+            <input type="text" id="aiInput" placeholder="Ask AI anything...">
+            <span class="ai-spinner" aria-hidden="true"></span>
+            <span class="ai-thinking-text" aria-hidden="true">Thinking…</span>
+        </div>
+
+        <button id="aiRunBtn" onclick="submitAiCommand()">↗</button>
+        <button id="aiCancelBtn" onclick="closeAiBox()">✕</button>
+
     </div>
 
-    <button id="aiRunBtn" onclick="submitAiCommand()">Run AI</button>
-    <button id="aiCancelBtn" onclick="closeAiBox()">Cancel</button>
-</div>
+    <!-- kept for compatibility; hidden in chat flow -->
+    <div id="aiResultBox" class="collapsed" aria-hidden="true">
+        <div style="font-size:16px;font-weight:600;margin-bottom:8px;color:#fff;">AI Result</div>
+        <div id="aiResultContent"></div>
 
-<div id="aiResultBox">
-    <div style="font-size:18px;font-weight:600;margin-bottom:10px;">AI Result</div>
-    <div id="aiResultContent"></div>
+        <div class="ai-result-actions">
+            <button class="ai-result-btn ai-replace-btn" onclick="applyAiReplace()">Replace Selection</button>
+            <button class="ai-result-btn ai-discard-btn" onclick="closeAiResult()">Discard</button>
+        </div>
+    </div>
 
-    <button class="ai-result-btn ai-replace-btn" onclick="applyAiReplace()">Replace Selection</button>
-    <button class="ai-result-btn ai-discard-btn" onclick="closeAiResult()">Discard</button>
 </div>
 
 <div id="aiErrorBox">AI is not available to generate your answer.</div>
 
 
+
 <script>
-    // AI SECTION >>>>>>>>>>>>>>>>>>>>>>
+  /* ============================================
+   AI SECTION (With Deep Debug)
+============================================ */
+
 let currentSelection = "";
 let currentQuill = null;
 let selectionIndex = null;
+let selectionLength = null;
 
-document.addEventListener("mouseup", function () {
+/* --------------------------------------------
+   1. Detect Text Selection
+-------------------------------------------- */
+document.addEventListener("mouseup", function (event) {
+
+    // IGNORE MOUSEUP KALAU KLIK DI UI AI
+    const target = event.target;
+    if (
+        target.closest("#aiPopup") ||
+        target.closest("#aiCommandBox") ||
+        target.closest("#aiResultBox")
+    ) {
+        // interaction inside AI UI — ignore
+        // console.log("Mouseup ignored (AI UI interaction)");
+        return;
+    }
+
     const selection = window.getSelection();
     const text = selection.toString().trim();
     const popup = document.getElementById("aiPopup");
 
+    // No text → reset and stop
     if (!text) {
+        popup.classList.remove("visible");
+        resetAiState();
+        return;
+    }
+
+    // Rect for popup position
+    let range, rect;
+    try {
+        range = selection.getRangeAt(0);
+        rect = range.getBoundingClientRect();
+    } catch (err) {
+        console.error("Range error:", err);
+        return;
+    }
+
+    popup.style.left = `${rect.left + rect.width / 2 + window.scrollX}px`;
+    popup.style.top = `${rect.top - 45 + window.scrollY}px`;
+
+    popup.classList.remove("hidden", "visible");
+    void popup.offsetWidth;
+    popup.classList.add("visible");
+
+    // Ensure selection is inside Quill editor
+    const editorEl = range.startContainer.parentElement.closest(".ql-editor");
+
+    if (!editorEl) {
         popup.classList.remove("visible");
         return;
     }
 
-    const range = selection.getRangeAt(0);
-    const rect = range.getBoundingClientRect();
+    // Ensure editor is in edit mode
+    const wrapper = editorEl.closest(".editor-wrapper");
+    const isEditing = wrapper?.classList.contains("active");
 
-    const scrollX = window.scrollX || window.pageXOffset;
-    const scrollY = window.scrollY || window.pageYOffset;
+    if (!isEditing) {
+        popup.classList.remove("visible");
+        return;
+    }
 
-    popup.style.left = `${rect.left + rect.width / 2 + scrollX}px`;
-    popup.style.top  = `${rect.top - 45 + scrollY}px`;
-
-    popup.classList.remove("hidden");
-    popup.classList.add("visible");
-
-    // find editor
-    const editorEl = range.startContainer.parentElement.closest(".ql-editor");
-    if (!editorEl) return;
-
+    // Get Quill instance
     const editorId = editorEl.parentElement.id;
     const found = notes.find(n => n.quill.root.parentElement.id === editorId);
 
     currentQuill = found?.quill || null;
+
     currentSelection = text;
 
-    // QUILL selection index
     if (currentQuill) {
-        const q = currentQuill.getSelection();
-        if (q && q.length > 0) {
+        const q = currentQuill.getSelection(true);
+        if (q) {
             selectionIndex = q.index;
             selectionLength = q.length;
+            // store snapshot so clicks on UI won't lose the selection
+            window._aiStoredSelection = {
+                quillId: currentQuill.root.parentElement.id || null,
+                quill: currentQuill,
+                index: selectionIndex,
+                length: selectionLength,
+                text: currentSelection
+            };
         }
     }
+
 });
 
-
+/* --------------------------------------------
+   2. Ask AI Popup Click
+-------------------------------------------- */
 document.getElementById("aiPopup").addEventListener("click", function () {
     this.classList.remove("visible");
     this.classList.add("hidden");
-
-    openAiCommandPopup();
+    openAiCommandPopup();   
 });
 
+/* --------------------------------------------
+   3. Open/Close Command Box
+-------------------------------------------- */
 function openAiCommandPopup() {
-    document.getElementById("aiCommandBox").style.display = "block";
-}
+    const popup = document.getElementById("aiPopup");
+    const box = document.getElementById("aiCommandBox");
 
-function setAiShortcut(text) {
-    document.getElementById('aiInput').value = text;
+    // Ambil posisi popup, tampilkan box di dekat popup
+    const rect = popup.getBoundingClientRect();
+
+    box.style.position = "fixed";
+    // adjust so box doesn't overflow right edge
+    const left = Math.max(8, rect.left + window.scrollX);
+    box.style.left = left + "px";
+
+    // place below popup, but ensure visible inside viewport
+    const top = rect.bottom + 10 + window.scrollY;
+    box.style.top = Math.min(top, window.innerHeight - 120) + "px";
+
+    // reset message area (optional) - keep history? we keep history so not clearing
+    // hide resultBox (compat)
+    document.getElementById("aiResultBox").style.display = "none";
+
+    box.style.display = "block";
+
+    // focus input for quick typing
+    setTimeout(() => {
+        const input = document.getElementById("aiInput");
+        input.focus();
+        input.select?.();
+    }, 40);
 }
 
 function closeAiBox() {
     document.getElementById("aiCommandBox").style.display = "none";
 }
 
+/* --------------------------------------------
+   4. Submit AI Command
+-------------------------------------------- */
 function submitAiCommand() {
     const instruction = document.getElementById("aiInput").value.trim();
     if (!instruction) return;
 
-    document.getElementById("aiCommandBox").style.display = "none";
+    // tampilkan sebagai bubble user
+    addChatMessage(instruction, true);
+
+    // call AI
     runInlineAI(instruction);
 }
 
+/* listen Enter key on input to submit */
+document.getElementById("aiInput").addEventListener("keydown", function(e){
+    if (e.key === "Enter") {
+        e.preventDefault();
+        submitAiCommand();
+    }
+});
+
+/* --------------------------------------------
+   5. Run AI (Core Function)
+-------------------------------------------- */
 function runInlineAI(instruction) {
-    if (!currentQuill || !currentSelection) return;
+    if (!currentQuill) {
+        console.error("STOP → currentQuill NULL");
+        // still show thinking UI to indicate action if selection not required
+        // but return
+        return;
+    }
+    if (!currentSelection) {
+        console.error("STOP → currentSelection EMPTY");
+        return;
+    }
 
     const prompt = `${instruction}:\n\n"${currentSelection}"`;
+    console.log("Prompt to API:", prompt);
 
-    showAiBlocking(); // BLOCK EVERYTHING
+    // show in-bar thinking UI
+    showAiBlocking();
 
     fetch("/api/ai", {
         method: "POST",
@@ -685,86 +915,233 @@ function runInlineAI(instruction) {
     })
     .then(res => res.json())
     .then(data => {
+        // hide thinking UI
+        hideAiBlocking();
 
-        hideAiBlocking(); // UNBLOCK
-
-        if (!data || !data.answer) {
-            showAiError();
-            return;
+        if (!data?.answer) {
+            console.error("AI returned empty answer");
+            return showAiError();
         }
 
         const aiText = data.answer.trim();
 
+        // hide small floating popup (so it won't overlap)
         document.getElementById("aiPopup").style.display = "none";
 
-        document.getElementById("aiResultContent").innerText = aiText;
-        document.getElementById("aiResultBox").style.display = "block";
+        // append result as chat bubble above input
+        addChatMessage(aiText, false);
 
+        // restore input
+        const input = document.getElementById("aiInput");
+        input.value = "";
+        input.disabled = false;
+        input.focus();
+
+        // keep compatibility: store last text and show aiResultBox (hidden by default)
         window.lastAiText = aiText;
+        // Fill aiResultContent (kept for compatibility)
+        const resultContent = document.getElementById("aiResultContent");
+        if (resultContent) resultContent.innerText = aiText;
+        // show hidden resultBox only if you still want it visible (optional)
+        // document.getElementById("aiResultBox").style.display = "block";
     })
     .catch(err => {
         hideAiBlocking();
+        console.error("AI API ERROR:", err);
         showAiError();
     });
 }
 
-function applyAiReplace() {
-    if (!currentQuill || selectionIndex === null || selectionLength === null) {
-        closeAiResult();
+/* helper to append chat message */
+let activeBubbleMenu = null;
+let activeBubbleText = "";
+
+/* Add chat bubble + attach click handler */
+function addChatMessage(text, isUser = false) {
+    const msgBox = document.getElementById("aiChatMessages");
+    const bubble = document.createElement("div");
+
+    bubble.classList.add("ai-chat-bubble");
+    if (isUser) bubble.classList.add("ai-chat-user");
+
+    bubble.innerText = text;
+
+    // hanya AI bubble yang bisa di-replace
+    if (!isUser) {
+        bubble.addEventListener("click", function (e) {
+            e.stopPropagation();
+            openBubbleActionMenu(bubble, text);
+        });
+    }
+
+    msgBox.appendChild(bubble);
+    msgBox.scrollTop = msgBox.scrollHeight;
+}
+
+/* Create floating action menu below bubble */
+function openBubbleActionMenu(bubble, text) {
+    // close existing
+    closeBubbleActionMenu();
+    activeBubbleText = text;
+
+    // create menu
+    const menu = document.createElement("div");
+    menu.classList.add("ai-bubble-action-menu");
+    // make it a simple block that will be inserted under the input row
+    menu.style.position = "relative";
+    menu.style.marginTop = "10px";
+    menu.style.display = "flex";
+    menu.style.justifyContent = "flex-end";
+    menu.innerHTML = `
+        <button id="__ai_replace_btn">Replace</button>
+    `;
+
+    // insert menu just below the input row, inside aiCommandBox
+    const commandBox = document.getElementById("aiCommandBox");
+    const row = commandBox.querySelector(".ai-row");
+    // insert after the row so menu is visually under the input
+    row.insertAdjacentElement('afterend', menu);
+
+    // wire button
+    menu.querySelector("#__ai_replace_btn").addEventListener("click", function(e){
+        e.stopPropagation();
+        replaceSelectedTextFromBubble();
+    });
+
+    activeBubbleMenu = menu;
+}
+
+function replaceSelectedTextFromBubble() {
+    const snap = window._aiStoredSelection;
+
+    if (!snap || !snap.quill) {
+        console.error("No stored selection found");
+        showAiError();
         return;
     }
 
+    const quill = snap.quill;
+    const idx = snap.index;
+    const len = snap.length;
+    const newText = activeBubbleText || window.lastAiText || "";
+
+    try {
+        quill.deleteText(idx, len);
+        quill.insertText(idx, newText);
+    } catch (err) {
+        console.error("Replace error:", err);
+        showAiError();
+        return;
+    }
+
+    closeBubbleActionMenu();
+    closeAiBox();
+    resetAiState();
+}
+
+/* Close menu if clicking somewhere else */
+document.addEventListener("click", function () {
+    closeBubbleActionMenu();
+});
+
+function closeBubbleActionMenu() {
+    if (activeBubbleMenu) {
+        activeBubbleMenu.remove();
+        activeBubbleMenu = null;
+        activeBubbleText = "";
+    }
+}
+
+/* --------------------------------------------
+   6. Replace Text in Editor
+-------------------------------------------- */
+function applyAiReplace() {
+    if (!currentQuill) {
+        console.error("currentQuill missing");
+        return closeAiResult();
+    }
+    if (selectionIndex === null) {
+        console.error("selectionIndex missing");
+        return closeAiResult();
+    }
+
     currentQuill.deleteText(selectionIndex, selectionLength);
-    currentQuill.insertText(selectionIndex, window.lastAiText);
+    currentQuill.insertText(selectionIndex, window.lastAiText || '');
 
+    // close result and box
     closeAiResult();
+    closeAiBox();
+    resetAiState();
+}
 
-    // Reset
+function replaceSelectedText(newText) {
+    if (!currentQuill || selectionIndex == null) {
+        console.error("Cannot replace → no quill or index");
+        return;
+    }
+
+    currentQuill.deleteText(selectionIndex, currentSelection.length);
+    currentQuill.insertText(selectionIndex, newText);
+
+    resetAiState();
+}
+
+/* --------------------------------------------
+   7. Helpers & UI blocking (in-bar)
+-------------------------------------------- */
+function resetAiState() {
     currentSelection = "";
+    currentQuill = null;
     selectionIndex = null;
     selectionLength = null;
+
+    const popup = document.getElementById("aiPopup");
+    popup.classList.remove("hidden");
+    popup.classList.remove("visible");
+    popup.style.display = ""; // jaga-jaga kalau ada inline style
+}
+
+function closeAiResult() {
+    document.getElementById("aiResultBox").style.display = "none";
+    resetAiState();
 }
 
 function showAiError() {
     const box = document.getElementById("aiErrorBox");
     box.style.display = "block";
-
-    setTimeout(() => {
-        box.style.display = "none";
-    }, 3000); // auto-hide after 3 sec
+    setTimeout(() => box.style.display = "none", 3000);
 }
 
-function closeAiError() {
-    document.getElementById("aiErrorBox").style.display = "none";
-}
-
-function closeAiResult() {
-    document.getElementById("aiResultBox").style.display = "none";
-}
-
-function replaceSelectedText(newText) {
-    if (selectionIndex == null || !currentQuill) return;
-
-    const oldLen = currentSelection.length;
-
-    // Remove old text
-    currentQuill.deleteText(selectionIndex, oldLen);
-
-    // Insert AI-generated text
-    currentQuill.insertText(selectionIndex, newText);
-
-    // Reset temp variables
-    currentSelection = "";
-    selectionIndex = null;
-}
-
+/* replace full-page overlay with in-bar thinking UI */
 function showAiBlocking() {
-    document.getElementById("aiBlockingOverlay").style.display = "block";
+    // Enable in-bar thinking UI (spinner + text)
+    const wrap = document.querySelector('.ai-input-wrap');
+    const input = document.getElementById('aiInput');
+    if (wrap && input) {
+        wrap.classList.add('thinking');
+        input.disabled = true;
+        // optionally clear input text while thinking for clearer UX
+        // input.dataset._prev = input.value;
+        // input.value = '';
+    }
+    // Do NOT show the full-page overlay; keep it hidden
+    // document.getElementById("aiBlockingOverlay").style.display = "block";
 }
 
 function hideAiBlocking() {
-    document.getElementById("aiBlockingOverlay").style.display = "none";
+    const wrap = document.querySelector('.ai-input-wrap');
+    const input = document.getElementById('aiInput');
+    if (wrap && input) {
+        wrap.classList.remove('thinking');
+        input.disabled = false;
+        // if we cleared value earlier, restore it
+        // if (input.dataset._prev !== undefined) { input.value = input.dataset._prev; delete input.dataset._prev; }
+    }
+    // keep overlay hidden
+    // document.getElementById("aiBlockingOverlay").style.display = "none";
 }
+
+
 // NOTES SECTION >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 
@@ -854,6 +1231,7 @@ async function createNote() {
             page_id: id_page,
             isEditing: false
         });
+
         quill.on('text-change', () => updateNoteContent(noteId));
 
     } catch (err) {
@@ -1046,7 +1424,7 @@ function loadPages() {
                     id_user: id_user,
                     page_id: page.id_page 
                 });
-                
+
                 quill.on('text-change', function() {
                     updateNoteContent(noteId);
                 });
@@ -1091,10 +1469,9 @@ function deleteNote(noteId, note_ids) {
         showNotification('error', 'Note ID not found. Please refresh the page.');
         return;
     }
-    const overlay = document.getElementById('fullscreenOverlay');
-    
+
     Swal.fire({
-        title: 'Delete this page?',
+        title: 'Delete this note?',
         text: "Once deleted, it cannot be restored.",
         icon: 'warning',
         showCancelButton: true,
@@ -1122,34 +1499,19 @@ function deleteNote(noteId, note_ids) {
             .then(response => response.json())
             .then(result => {
                 if (result.success) {
-
-                    // Hapus dari notes[] berdasarkan page_id
-                    const index = notes.findIndex(n => Number(n.page_id) === Number(noteId));
-                    if (index !== -1) {
-                        notes.splice(index, 1);
-                    } else {
-                        console.warn("deleteNote: page_id not found in notes[]", noteId);
-                    }
+                    notes.splice(notes.findIndex(n => n.id_page === noteId), 1);
 
                     const card = document.querySelector(`[data-note-id="${note_ids}"]`);
                     if (card) {
                         card.style.transition = 'opacity 0.4s ease, transform 0.3s ease';
                         card.style.opacity = '0';
                         card.style.transform = 'scale(0.95)';
-                        if (card.classList.contains("fullscreen")) {
-                            card.classList.remove("fullscreen", "fullscreen-enter", "fullscreen-exit");
-                            document.getElementById("fullscreenOverlay").classList.remove("active");
-                        }
-
-                        setTimeout(() => {
-                            card.remove();
-                            rebuildCardState();
-                        }, 400);
+                        setTimeout(() => card.remove(), 400);
                     }
 
                     showNotification('success', 'Note deleted successfully');
                 } else {
-                    showNotification('error', result.message || 'Failed to delete pages');
+                    showNotification('error', result.message || 'Failed to delete note');
                 }
             })
             .catch(() => {
@@ -1185,18 +1547,7 @@ function showNotification(type, message) {
     });
 }
 
-function rebuildCardState() {
-    cardStates = {};  
-
-    document.querySelectorAll(".note-card").forEach(card => {
-        const id = card.dataset.id;
-        cardStates[id] = { isEditing: false };
-    });
-}
-
-
 document.getElementById('addNoteBtn').addEventListener('click', createNote);
-
 loadPages();
 </script>
 

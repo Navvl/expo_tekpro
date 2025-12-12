@@ -178,11 +178,7 @@
                             <div class="card card-transparent shadow-none d-flex justify-content-center mb-0 auth-card">
                                 <div class="card-body">
                                     <a href="#" class="navbar-brand d-flex align-items-center mb-3">
-                                        <div class="logo-main">
-                                            <div class="logo-normal">
-                                                <img src="{{ asset('storage/logos/' . optional(App\Models\Setting::first())->logo) }}" alt="Logo" style="max-width: 50px;">
-                                            </div>                                            
-                                        </div>
+               
                                         <h4 class="logo-title ms-3">Noive</h4>
                                     </a>
                                     <h2 class="mb-2 text-center">Sign In</h2>
